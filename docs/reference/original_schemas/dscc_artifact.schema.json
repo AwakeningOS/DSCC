@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.example/spec/artifact/v0.1/schema.json",
+  "title": "DSCC Scientific Artifact Manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "objectType",
+    "title",
+    "authors",
+    "license",
+    "payloads",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "objectType": {
+      "enum": [
+        "Dataset",
+        "Tool",
+        "Workflow",
+        "ExperimentRun",
+        "Claim",
+        "EvidenceLink",
+        "WorldSnapshot",
+        "Task",
+        "DecisionRecord",
+        "MemoryCapsule",
+        "VerificationReceipt",
+        "CreditReceipt",
+        "IndexRecord",
+        "PolicyProfile"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "signature": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "license": {
+      "type": "string"
+    },
+    "payloads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "cid"
+        ],
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "cid": {
+            "type": "string"
+          },
+          "mediaType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "encryption": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "used": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wasDerivedFrom": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wasGeneratedBy": {
+          "type": "string"
+        },
+        "wasAssociatedWith": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "toolchain": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "cid": {
+            "type": "string"
+          },
+          "ociDigest": {
+            "type": "string"
+          },
+          "signature": {
+            "type": "string"
+          },
+          "attestation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "class": {
+          "enum": [
+            "V0",
+            "V1",
+            "V2",
+            "V3",
+            "V4"
+          ]
+        },
+        "policyCid": {
+          "type": "string"
+        },
+        "receipts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sensitivity": {
+      "enum": [
+        "public",
+        "restricted",
+        "confidential",
+        "secret"
+      ]
+    },
+    "retention": {
+      "enum": [
+        "ephemeral",
+        "project",
+        "archival",
+        "critical",
+        "restricted"
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.example/spec/job/v0.1/schema.json",
+  "title": "DSCC Job Specification",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "jobId",
+    "workflowCid",
+    "inputCids",
+    "resources",
+    "runtime",
+    "verification"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "jobId": {
+      "type": "string"
+    },
+    "workflowCid": {
+      "type": "string"
+    },
+    "inputCids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "cpuCores": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ramBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "vendor": {
+              "type": "string"
+            },
+            "model": {
+              "type": "string"
+            },
+            "minVramBytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "diskBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxSeconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "cpuCores",
+        "ramBytes",
+        "maxSeconds"
+      ]
+    },
+    "runtime": {
+      "enum": [
+        "wasi",
+        "oci-gvisor",
+        "firecracker",
+        "confidential-container",
+        "local-only"
+      ]
+    },
+    "network": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "deny",
+            "allowlist",
+            "unrestricted"
+          ]
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "mode"
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "class"
+      ],
+      "properties": {
+        "class": {
+          "enum": [
+            "V0",
+            "V1",
+            "V2",
+            "V3",
+            "V4"
+          ]
+        },
+        "replicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "absoluteTolerance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "relativeTolerance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "invariants": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auditorPolicyCid": {
+          "type": "string"
+        }
+      }
+    },
+    "publication": {
+      "type": "object",
+      "properties": {
+        "visibility": {
+          "enum": [
+            "private",
+            "project",
+            "public"
+          ]
+        },
+        "retention": {
+          "enum": [
+            "ephemeral",
+            "project",
+            "archival",
+            "critical",
+            "restricted"
+          ]
+        }
+      }
+    },
+    "capabilityToken": {
+      "type": "string"
+    },
+    "creditBudget": {
+      "type": "number",
+      "minimum": 0
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

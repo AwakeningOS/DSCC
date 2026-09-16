@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.example/spec/node/v0.1/schema.json",
+  "title": "DSCC Node Capability Record",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "nodeId",
+    "sequence",
+    "validUntil",
+    "resources",
+    "runtimes",
+    "policy",
+    "signature"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "nodeId": {
+      "type": "string"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "validUntil": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "cpuArch": {
+          "type": "string"
+        },
+        "cpuCores": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ramBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gpus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "vendor": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "vramBytes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "storageFreeBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bandwidthMbps": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "runtimes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "wasi",
+          "oci-gvisor",
+          "firecracker",
+          "confidential-container"
+        ]
+      }
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "acceptedJobClasses": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "V0",
+              "V1",
+              "V2",
+              "V3",
+              "V4"
+            ]
+          }
+        },
+        "maxDurationSeconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "networkMode": {
+          "enum": [
+            "deny",
+            "allowlist",
+            "unrestricted"
+          ]
+        },
+        "maxPowerWatts": {
+          "type": "number",
+          "minimum": 0
+        },
+        "allowedLicenses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "localityTags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pricing": {
+      "type": "object"
+    },
+    "attestations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "signature": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
