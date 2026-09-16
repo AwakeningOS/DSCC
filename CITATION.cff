@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite the DSCC concept paper when discussing this architecture."
+title: "DSCC Desktop"
+type: software
+version: 0.0.1
+repository-code: "https://github.com/AwakeningOS/DSCC"
+authors:
+  - family-names: Maeda
+    given-names: Yusuke
+license: MIT
+preferred-citation:
+  type: report
+  title: "Distributed Scientific Cognition Commons"
+  authors:
+    - family-names: Maeda
+      given-names: Yusuke
+  doi: 10.5281/zenodo.22782576

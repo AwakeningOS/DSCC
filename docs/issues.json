@@ -1,0 +1,56 @@
+[
+  {
+    "id": "T001",
+    "title": "[T001] Local service and owner permissions",
+    "body": "# T001 — Local service and owner permissions\n\nStatus: READY\nDependencies: none\n\n## Goal\n\nCreate a durable local service boundary for UI/MCP clients. Separate model-facing requests from owner approval and key access. Preserve signed asset IDs and original attribution.\n\n## Edit boundaries\n\n* `src/dscc/service.py`\n* `src/dscc/ipc.py`\n* `tests/test_service.py`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nTwo clients see the same assets; invalid client credentials and origin are rejected; owner approval cannot be called with a model client credential; crash recovery is explicit. No listening on a public interface.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T002",
+    "title": "[T002] Official MCP SDK and host-app integration",
+    "body": "# T002 — Official MCP SDK and host-app integration\n\nStatus: READY\nDependencies: none\n\n## Goal\n\nReplace the documented minimal stdio subset with the official SDK after inspecting current SDK documentation; preserve all tool contracts. Test LM Studio and Codex with actual installed clients.\n\n## Edit boundaries\n\n* `src/dscc/mcp_server.py`\n* `scripts/make_client_config.py`\n* `docs/INTEGRATIONS.ja.md`\n* `tests/test_mcp.py`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nInitialize/list/call/errors continue to pass; stdout contains protocol only; read/write in client A is visible in client B; job approval remains unavailable to models. Record exact host versions or leave manual tests explicitly unverified.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T003",
+    "title": "[T003] WASI executor with enforceable limits",
+    "body": "# T003 — WASI executor with enforceable limits\n\nStatus: READY\nDependencies: none\n\n## Goal\n\nAdd a genuine isolated runtime before accepting arbitrary third-party tools. Implement explicit input mounts, no default network, memory/fuel/deadline limits, output limits and cancellation.\n\n## Edit boundaries\n\n* `src/dscc/executors/`\n* `tests/test_sandbox.py`\n* `docs/RUNTIME_MATRIX.md`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nAdversarial module cannot read a secret outside mounts, open a network connection, exceed configured memory or loop indefinitely. Tests fail closed if the runtime is absent. Never fall back to subprocess shell execution.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T004",
+    "title": "[T004] Desktop user interface",
+    "body": "# T004 — Desktop user interface\n\nStatus: BLOCKED\nDependencies: T001\n\n## Goal\n\nImplement a thin desktop shell for research assets, active jobs, approvals, storage and sharing settings. Use the service API, not direct key or DB access.\n\n## Edit boundaries\n\n* `apps/desktop/`\n* `docs/UI_SPEC.md`\n* `tests/ui/`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nShow actual capabilities; pending permissions are clear; cancel/stop works; no unimplemented GPU slider is presented as enforceable; no private folder auto-publication.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T005",
+    "title": "[T005] Explicit peer invitations and artifact transport",
+    "body": "# T005 — Explicit peer invitations and artifact transport\n\nStatus: READY\nDependencies: none\n\n## Goal\n\nImplement opt-in transport for the existing signed bundle profile, with a Kubo/libp2p adapter or reviewed alternative. Pin peer identities and separate storage retrieval from compute permission.\n\n## Edit boundaries\n\n* `src/dscc/transports/`\n* `tests/test_transport.py`\n* `docs/PEERING.md`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nTwo real PCs exchange the same CID, altered blocks are rejected, untrusted signers require consent, nodes may leave, no central store is required. Local tests cannot be reported as internet/NAT tests.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T006",
+    "title": "[T006] GPU worker capability and isolation matrix",
+    "body": "# T006 — GPU worker capability and isolation matrix\n\nStatus: BLOCKED\nDependencies: T001, T003\n\n## Goal\n\nAdd GPU inventory and a supported execution backend with measured owner limits. Start with explicit dedicated-device or time-slot scheduling; do not promise fractional VRAM isolation on unsupported GPUs.\n\n## Edit boundaries\n\n* `src/dscc/gpu/`\n* `tests/test_gpu.py`\n* `docs/RUNTIME_MATRIX.md`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nRecord GPU/driver/runtime, observed memory and latency, cancellation and power/thermal behavior. Two WAN GPUs are not declared one larger VRAM pool. Unavailable GPU tests must be skipped, not fabricated.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T007",
+    "title": "[T007] Research object adapters and catalog rebuild",
+    "body": "# T007 — Research object adapters and catalog rebuild\n\nStatus: READY\nDependencies: none\n\n## Goal\n\nImplement explicit migration from paper Artifact profiles to the executable seed/new profile, plus RO-Crate/PROV export and catalog rebuild. Keep hypotheses and execution results distinct.\n\n## Edit boundaries\n\n* `src/dscc/adapters/`\n* `src/dscc/catalog.py`\n* `schemas/`\n* `tests/test_research_objects.py`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nValid source examples round-trip with provenance/license retained; malformed schemas fail; signed bytes are unchanged; rebuild restores searchable records after index deletion; imported artifacts do not execute.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T008",
+    "title": "[T008] Reproducible shared-world example",
+    "body": "# T008 — Reproducible shared-world example\n\nStatus: BLOCKED\nDependencies: T003, T007\n\n## Goal\n\nAdd an actual small scientific simulator with versioned input, state, parameters, seed, output and fork history. It should be usable by different model clients.\n\n## Edit boundaries\n\n* `examples/worlds/`\n* `tests/test_world_handoff.py`\n* `docs/WORLDS.md`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nIndependent rerun within declared tolerance; branch ancestry preserved; output contains evidence and limitations; model A to B handoff reconstructs the experiment. No unmeasured materials-science novelty claims.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  },
+  {
+    "id": "T009",
+    "title": "[T009] Adversarial verification and release audit",
+    "body": "# T009 — Adversarial verification and release audit\n\nStatus: READY\nDependencies: none\n\n## Goal\n\nReview the core as hostile input, not just happy-path code. Expand bundle, canonicalization, quota, signature, job replay, MCP framing and concurrency tests.\n\n## Edit boundaries\n\n* `tests/security/`\n* `docs/THREAT_MODEL.md`\n* `reports/`\n\nCoordinate any shared-core or protocol change through an ADR.\n\n## Acceptance\n\nProvide minimal reproductions and regression tests for findings; differentiate integrity from truth and host-user trust from isolation; no secrets in logs or release archive.\n\n## Handoff\n\nRecord actual commands, outputs, dependency versions, baseline commit, untested environments, and the next action. Use `docs/HANDOFF_TEMPLATE.md`.\n",
+    "state": "planned"
+  }
+]

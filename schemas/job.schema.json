@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DSCC seed job specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "input_cid",
+    "tool",
+    "tool_digest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dscc.job.seed/0.1"
+    },
+    "input_cid": {
+      "type": "string",
+      "pattern": "^b[a-z2-7]{58}$"
+    },
+    "tool": {
+      "const": "dscc.integer_stats.v1"
+    },
+    "tool_digest": {
+      "type": "string",
+      "pattern": "^b[a-z2-7]{58}$"
+    }
+  }
+}

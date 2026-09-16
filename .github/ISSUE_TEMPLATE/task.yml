@@ -1,0 +1,22 @@
+name: Development task
+description: Scoped task for a human or coding agent
+title: "[Task] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies, baseline SHA, and permitted file paths
+  - type: textarea
+    id: validation
+    attributes:
+      label: Required tests and untested environments
+  - type: textarea
+    id: handoff
+    attributes:
+      label: Claimant and handoff

@@ -1,0 +1,13 @@
+{
+  "schema": "dscc.artifact.seed/0.1",
+  "kind": "MemoryCapsule",
+  "title": "Materials research notes",
+  "summary": "materials research handoff",
+  "data": {
+    "observation": "A reproducible research record example.",
+    "next_question": "Which conditions should be tested next?",
+    "limitations": "Synthetic example; no experimental result is asserted."
+  },
+  "parents": [],
+  "license": "CC0-1.0"
+}

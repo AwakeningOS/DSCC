@@ -1,0 +1,45 @@
+[
+  {
+    "input": null,
+    "canonical_utf8": "null",
+    "cid": "bafkreiduenhjrl7hjgh3lwxr6nvmfv4kzqzzizhzkbydxdabtcjptavzbm"
+  },
+  {
+    "input": true,
+    "canonical_utf8": "true",
+    "cid": "bafkreifvx2sbw3dch56at4n7etok4whlvm6azxmqvwlgxrb2iw2eqz7bfm"
+  },
+  {
+    "input": 0,
+    "canonical_utf8": "0",
+    "cid": "bafkreic75tvwn76in44nsutynrwws3dzyln4eoo5j2i3izzj245cp62x5e"
+  },
+  {
+    "input": -42,
+    "canonical_utf8": "-42",
+    "cid": "bafkreih6zaaanxyfijkjwtf2v64jq7xoac5utpfds3xp5gwixznvskhi6y"
+  },
+  {
+    "input": {
+      "b": 2,
+      "a": 1
+    },
+    "canonical_utf8": "{\"a\":1,\"b\":2}",
+    "cid": "bafkreicdewgp66b744bw3csdam7ygcw7yyhmanzyerzvjcwhik4iqkjho4"
+  },
+  {
+    "input": {
+      "text": "科学"
+    },
+    "canonical_utf8": "{\"text\":\"科学\"}",
+    "cid": "bafkreigfaex5sucru465iaowr3hmklqbklg246f65zv553mjjzgr6by3eu"
+  },
+  {
+    "input": {
+      "": 1,
+      "𐀀": 2
+    },
+    "canonical_utf8": "{\"𐀀\":2,\"\":1}",
+    "cid": "bafkreie5jtohdxngapcc7gzb3cgqyl74ggtwzun5iyoxgwkantywtbc7dy"
+  }
+]

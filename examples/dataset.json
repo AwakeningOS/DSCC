@@ -1,0 +1,17 @@
+{
+  "schema": "dscc.artifact.seed/0.1",
+  "kind": "Dataset",
+  "title": "Example measurements",
+  "summary": "",
+  "data": {
+    "values": [
+      4,
+      7,
+      7,
+      10
+    ],
+    "unit": "demonstration units"
+  },
+  "parents": [],
+  "license": "CC0-1.0"
+}

@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.invalid/schemas/artifact-seed-0.1",
+  "title": "DSCC seed artifact manifest (not the complete paper profile)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "kind",
+    "title",
+    "summary",
+    "data",
+    "parents",
+    "license"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dscc.artifact.seed/0.1"
+    },
+    "kind": {
+      "enum": [
+        "Dataset",
+        "Tool",
+        "Workflow",
+        "ExperimentRun",
+        "Claim",
+        "EvidenceLink",
+        "WorldSnapshot",
+        "Task",
+        "DecisionRecord",
+        "MemoryCapsule",
+        "VerificationReceipt",
+        "CreditReceipt",
+        "IndexRecord",
+        "PolicyProfile"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 4096
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/value"
+      }
+    },
+    "parents": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^b[a-z2-7]{58}$"
+      }
+    }
+  },
+  "$defs": {
+    "value": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/value"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/value"
+          }
+        }
+      ]
+    }
+  }
+}
