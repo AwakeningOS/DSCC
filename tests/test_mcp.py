@@ -113,8 +113,8 @@ def test_configuration_generator(tmp_path):
     p = subprocess.run([sys.executable,str(ROOT/"scripts/make_client_config.py"),
                        "--home",str(tmp_path/"state"),"--out",str(out)],capture_output=True,text=True,timeout=15)
     assert p.returncode == 0, p.stderr
-    lm = json.loads((out/"lmstudio.mcp.json").read_text())
-    codex = tomllib.loads((out/"codex.config.toml").read_text())
+    lm = json.loads((out/"lmstudio.mcp.json").read_text(encoding="utf-8"))
+    codex = tomllib.loads((out/"codex.config.toml").read_text(encoding="utf-8"))
     assert lm["mcpServers"]["dscc"]["args"] == codex["mcp_servers"]["dscc"]["args"]
     assert Path(lm["mcpServers"]["dscc"]["command"]).is_absolute()
     assert lm["mcpServers"]["dscc"]["args"][-1] == "mcp"

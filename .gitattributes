@@ -1,0 +1,7 @@
+# Preserve content hashes across Windows and Unix checkouts.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
+*.zip binary
+*.bundle binary

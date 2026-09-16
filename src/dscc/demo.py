@@ -19,7 +19,7 @@ def run_demo() -> dict:
         }, summary="materials example input", license="CC0-1.0"))
         bundle_ab = root / "a-to-b.json"
         bundle_ab.write_text(json.dumps(a.export_bundle(input_cid)), encoding="utf-8")
-        b.import_bundle(json.loads(bundle_ab.read_text()), {a.public_key})
+        b.import_bundle(json.loads(bundle_ab.read_text(encoding="utf-8")), {a.public_key})
         job = b.submit_job(input_cid)
         assert job["state"] == "pending"
         b.approve_job(job["id"])
@@ -27,7 +27,7 @@ def run_demo() -> dict:
         output_cid = complete["output_cid"]
         bundle_bc = root / "b-to-c.json"
         bundle_bc.write_text(json.dumps(b.export_bundle(output_cid)), encoding="utf-8")
-        c.import_bundle(json.loads(bundle_bc.read_text()), {a.public_key, b.public_key})
+        c.import_bundle(json.loads(bundle_bc.read_text(encoding="utf-8")), {a.public_key, b.public_key})
         fetched = c.fetch(output_cid)
         expected = {"count": 4, "sum": 28, "min": 4, "max": 10}
         assert fetched["body"]["data"]["result"] == expected

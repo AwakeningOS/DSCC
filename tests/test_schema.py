@@ -7,15 +7,15 @@ from dscc.models import validate_manifest
 ROOT=Path(__file__).resolve().parents[1]
 
 def test_examples_match_schema_and_runtime():
-    schema=json.loads((ROOT/'schemas/artifact.schema.json').read_text())
+    schema=json.loads((ROOT/'schemas/artifact.schema.json').read_text(encoding="utf-8"))
     jsonschema.Draft202012Validator.check_schema(schema)
     for p in (ROOT/'examples').glob('*.json'):
-        doc=json.loads(p.read_text())
+        doc=json.loads(p.read_text(encoding="utf-8"))
         jsonschema.validate(doc,schema)
         validate_manifest(doc)
 
 def test_stable_vectors():
-    vectors=json.loads((ROOT/'schemas/test_vectors.json').read_text())
+    vectors=json.loads((ROOT/'schemas/test_vectors.json').read_text(encoding="utf-8"))
     for row in vectors:
         actual=canonical_bytes(row['input'])
         assert actual.decode()==row['canonical_utf8']
