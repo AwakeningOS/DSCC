@@ -15,6 +15,7 @@ This is **a tested local foundation, not a released P2P/GPU-sharing desktop app*
 * Explicit bundle export/import with signature, identity and dependency checks.
 * Owner-approved local computation using one built-in deterministic integer-analysis tool.
 * A small MCP stdio server: search, read, record, verify, inspect tools, submit a pending job, and inspect job status. Models cannot approve/run jobs through this adapter.
+* A one-person, three-logical-node demo and automated tests, including subprocess MCP exchanges.
 
 **Not implemented:** internet P2P, NAT traversal, remote jobs, GPU execution, arbitrary-code sandboxes, payments, native desktop UI, installers, or unattended model-development loops. Host applications (LM Studio/Codex) have not been launched here. See `reports/validation.md` for the exact tests actually run.
 
