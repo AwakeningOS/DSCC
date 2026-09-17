@@ -66,6 +66,8 @@ The repository is **AwakeningOS/DSCC**. The application/package name remains `ds
 
 [計算で整理する共有記憶 — Computational Memory](docs/proposals/COMPUTATIONAL_MEMORY.ja.md) proposes preserving original research records while using versioned embeddings, lexical search and provenance-aware graph retrieval to organize memory across different AI models. It includes primary-source references, compatibility requirements and an implementation handoff related to T007. **Proposal only; no memory-search implementation or benchmark result is introduced by this document.**
 
+[分野を越える探索地図 — Exploration Atlas](docs/proposals/EXPLORATION_ATLAS.ja.md) extends that direction to trial-and-error paths across engineering, model development and everyday experience. It specifies typed episodes, independent semantic/structural retrieval, explicit analogy mappings, trial-backed transfer reports and source-linked motifs. [Implementation contracts](docs/proposals/exploration-atlas/IMPLEMENTATION.md) and [T010](docs/tasks/T010.md) include draft schemas, synthetic examples and executable contract tests. **The atlas application, semantic extraction, retrieval quality and map UI are not yet implemented or demonstrated.**
+
 ## Attribution and licensing
 
 Original DSCC concept: Yusuke Maeda. This initial code and new implementation documents are provided under the MIT license in `LICENSE`. Material in `docs/reference/` is retained from the supplied DSCC research packet with separate attribution and provenance; third-party software and future research assets retain their own licenses. The concept-paper DOI identifies the paper, not a software-release DOI.
