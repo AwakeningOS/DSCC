@@ -6,7 +6,7 @@
 作成日: 2026-09-17  
 DSCC構想・問題提起: Yusuke Maeda  
 確認したコード: `d706766c912b7f64c8d999ebbcd216f49baea1cb`  
-関連: [DSCC論文](https://doi.org/10.5281/zenodo.22782576)、[設計書](../ARCHITECTURE.ja.md)、[現行プロトコル](../PROTOCOL.md)、[T007](../tasks/T007.md)、[Issue #7](https://github.com/AwakeningOS/DSCC/issues/7)
+関連: [DSCC論文](https://doi.org/10.5281/zenodo.22782576)、[設計書](../ARCHITECTURE.ja.md)、[現行プロトコル](../PROTOCOL.md)、[潜在経験カプセル](./LATENT_EXPERIENCE.ja.md)、[T007](../tasks/T007.md)、[Issue #7](https://github.com/AwakeningOS/DSCC/issues/7)
 
 ## 1. 発想
 
@@ -160,4 +160,4 @@ Zero-Memは「生成LLMによる中間記憶の作文を必須にしない」と
 
 保存したのは、**原本を失わず、数値と接続関係を使って、モデルの違いを越えて経験へ辿り着く**という設計案である。AIによる高度な解釈を残しつつ、日常的な整理作業の多くを生成ではなく索引計算へ任せることを目指す。
 
-この文書には新規の実装、性能測定、テスト成功報告を含めていない。実装へ進む際は別の作業ブランチとレビューで既存システムへ接続する。
+この文書には新規の実装、性能測定、テスト成功報告を含めていない。実装へ進む際は別の作業ブランチとレビューで既存システムへ接続する。\n\nAIが原本や探索履歴を処理した結果として形成した内部状態そのものを再利用する方向は、別提案 [Latent Experience Capsule](./LATENT_EXPERIENCE.ja.md) に分離する。そこではKV Cacheの蒸留・圧縮とモデル間潜在転送を入口に、文章要約では失われる可能性がある「経験による下流判断の変化」を共有できるかを検証対象とする。
