@@ -115,7 +115,10 @@ def model_parent_cids(payload: dict[str, Any]) -> list[str]:
     refs = []
     for field in ("parent_model_cids", "training_run_cids", "dataset_cids", "code_cids"):
         refs.extend(p["provenance"][field])
-    return list(dict.fromkeys(refs))
+    result = list(dict.fromkeys(refs))
+    if len(result) > 32:
+        raise ValueError("model provenance exceeds the seed parent limit of 32")
+    return result
 
 
 def model_artifact(payload: dict[str, Any], *, license: str = "NOASSERTION") -> dict[str, Any]:
@@ -224,7 +227,10 @@ def training_parent_cids(payload: dict[str, Any]) -> list[str]:
     refs = [p["parent_model_cid"]]
     for field in ("dataset_cids", "code_cids", "capability_cids"):
         refs.extend(p[field])
-    return list(dict.fromkeys(refs))
+    result = list(dict.fromkeys(refs))
+    if len(result) > 32:
+        raise ValueError("training provenance exceeds the seed parent limit of 32")
+    return result
 
 
 def training_run_artifact(payload: dict[str, Any], *, license: str = "NOASSERTION") -> dict[str, Any]:
