@@ -62,6 +62,8 @@ Give a coding agent `AGENTS.md`, then choose one ready task from `docs/TASKS.md`
 
 The repository is **AwakeningOS/DSCC**. The application/package name remains `dscc-desktop`. See [GitHub collaboration setup](docs/GITHUB_SETUP.ja.md) for instructions. Repository rules and required reviews must be enabled separately by the owner; committing a workflow file does not configure branch protection.
 
+Long-term blockers between the current local foundation and a world-scale DSCC are tracked in the [世界規模化に向けた未解決課題レジストリ](docs/GLOBAL_SCALE_CHALLENGES.ja.md). It is a living backlog for future agents and contributors: an item remains unresolved until its implementation, threat assumptions, measurements and remaining limits are recorded.
+
 ## Design proposals
 
 [計算で整理する共有記憶 — Computational Memory](docs/proposals/COMPUTATIONAL_MEMORY.ja.md) proposes preserving original research records while using versioned embeddings, lexical search and provenance-aware graph retrieval to organize memory across different AI models. It includes primary-source references, compatibility requirements and an implementation handoff related to T007. **Proposal only; no memory-search implementation or benchmark result is introduced by this document.**
