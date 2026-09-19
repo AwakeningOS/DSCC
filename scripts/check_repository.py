@@ -24,6 +24,8 @@ def main() -> None:
                 "docs/GITHUB_SETUP.ja.md", "docs/SOURCE_TRACEABILITY.md",
                 "docs/GLOBAL_SCALE_CHALLENGES.ja.md",
                 "docs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md",
+                "docs/proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md",
+                "docs/tasks/T012.md",
                 "docs/adr/0004-open-model-commons-foundation.md"]
     for name in required:
         assert (ROOT / name).is_file(), f"missing {name}"
