@@ -84,9 +84,10 @@ class BlockStore:
         return {"cid": cid, "bytes": len(data), "verified": True}
 
     def add_file(self, source: Path) -> dict:
-        source = source.expanduser().resolve()
+        source = source.expanduser()
         if source.is_symlink() or not source.is_file():
             raise ValueError("block source must be a regular non-symlink file")
+        source = source.resolve()
         digest, size = self._digest_file(source)
         cid = cid_for_digest(digest)
         destination = self._path(cid)
