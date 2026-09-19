@@ -8,8 +8,15 @@
 4. `docs/TASKS.md`, then the chosen task file — dependencies and acceptance tests.
 5. `docs/GLOBAL_SCALE_CHALLENGES.ja.md` — unresolved blockers for a world-scale DSCC. Promote a challenge into an Issue/task only with explicit scope and acceptance evidence.
 6. For model distribution/training work, read `docs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md`, ADR-0004 and T011 before changing OMC contracts.
+7. For research-agent/orchestration work, read `docs/proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md` and T012.
 
 The original concept author is **Yusuke Maeda**. Preserve the project's model-agnostic, local-first, voluntary P2P direction. Do not turn it into a required proprietary cloud. Do not claim DSCC networking, GPU sharing, sandboxing, payments or research superiority is implemented unless it is actually demonstrated.
+
+## Research and design discipline
+
+* **Answer known questions from research first.** Before proposing an experiment or new mechanism, search current primary literature, specifications and relevant implementations. Record what is already known, what existing methods overlap with the proposal, and the precise question that remains unanswered. Run experiments for questions that cannot be settled from existing evidence.
+* **Design the strongest natural system first.** Build the architecture that can best satisfy the real objective. Do not restrict the main design merely to make comparisons or ablations convenient. Derive simplified baselines and ablations from the full design afterward.
+* **Make artifacts understandable without conversation history.** Research notes, proposals, handoffs and explanations must state the necessary premises, actors, causal links and unresolved questions so another human or model can continue from the artifact alone. Do not rely on hidden chain of thought or prior chat context.
 
 ## How to work together
 
