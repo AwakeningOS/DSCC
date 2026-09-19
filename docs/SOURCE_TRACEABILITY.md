@@ -17,5 +17,8 @@
 | Open-model distribution foundation | OMC profiles + local raw block store | Model/capability/training metadata and local block integrity implemented; no peer transfer or model execution. |
 | Distributed open-model compute | planner + future runtime/transport | Non-executing local placement planning implemented; real inference/training is T011 and dependent tasks. |
 | Agent cooperation in development | AGENTS + tasks + PR templates | Prepared artifacts; no background agent has been launched. |
+| Distributed AI Research Laboratory final goal | long-term DSCC direction | Defined as the orchestration layer where closed AI, open AI and humans continue shared AI-research projects through artifacts; not yet implemented. |
+| Cross-model research handoff | T012 | Contract/handoff work prepared; multi-agent autonomous research execution is future work. |
 
 The repository does not silently replace the paper. The M0 seed is a concrete implementation checkpoint inside its broader direction. All later features have independent acceptance gates.
+

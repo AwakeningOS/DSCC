@@ -153,6 +153,31 @@ G048は一項目にまとめて終了させるものではない。実装段階�
 
 ---
 
+## I. Distributed AI Research Laboratory固有の課題
+
+最終目標は [Distributed AI Research Laboratory](proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md) を参照する。Open Model Commonsの計算・model層に加えて、異なるAIと人間が長期研究を継承するための課題を管理する。
+
+| ID | 問題 | 必要になる能力・候補技術 | 種別 | 優先 |
+|---|---|---|---|---|
+| G063 | closed AI / open AI / human間で研究状態を共通表現する | versioned ResearchQuestion / LiteratureReview / Hypothesis / ExperimentPlan / Evaluation / ResearchState profiles | Engineering | P0 |
+| G064 | closed modelがprovider側で更新され完全再現できない | provider/model/snapshot metadata、input/output CIDs、tool/config capture、再現性class | Mixed | P0 |
+| G065 | agent交代時に会話contextなしで研究を継続する | artifact-only handoff、explicit unresolved questions、dependency graph、project state | Engineering | P0 |
+| G066 | 既知研究を再発明して無駄な実験を行う | primary-literature retrieval、citation graph、known-result registry、novelty/overlap check | Research | P0 |
+| G067 | 論文の主張とDSCC内の実測結果を混同する | source type、Claim/Evidence関係、measured-vs-reported provenance、date/model scope | Engineering | P0 |
+| G068 | 複数agentが同じ研究を重複実行する | experiment fingerprint、semantic/structural duplicate detection、shared work queue | Mixed | P1 |
+| G069 | 異なるagentの結論が衝突する | competing hypotheses、evidence graph、replication requests、unresolved conflict state | Research | P0 |
+| G070 | 長期projectのresearch stateが肥大化・分岐する | immutable project snapshots、branching、checkpointed research state、summaries linked to originals | Mixed | P1 |
+| G071 | benchmarkだけを最適化して実能力を誤る | rotating/held-out evaluation、cross-benchmark transfer、adversarial evaluation、metric provenance | Research | P0 |
+| G072 | research agent自身の能力を測れない | literature efficiency、novel-gap identification、experiment validity、failure recovery、cross-agent handoff benchmarks | Research | P1 |
+| G073 | 研究budgetをどの問い・branchへ配るか | expected-information-gain、portfolio scheduling、uncertainty/impact/cost models、human/agent priorities | Research | P1 |
+| G074 | 新しいmodel/agentが過去研究を正しく再利用できない | compatibility profiles、retrieval evaluation、transfer tests、source-linked summaries、LEC adapters where justified | Research | P1 |
+| G075 | 自律研究loopが同じ局所探索を繰り返す | exploration diversity、branching strategies、negative-result memory、novelty search、periodic problem reframing | Research | P1 |
+| G076 | 世界規模で複数研究projectを同時進行する | project namespace、dependency scheduling、federated research index、cross-project artifact reuse | Mixed | P1 |
+
+これらはAI研究の品質・効率・継続性に関する問題であり、単純なP2P接続やGPU数だけでは解決しない。
+
+---
+
 ## 完成条件を誤らないための共通原則
 
 世界規模版では、次を別々の事実として保持する。
@@ -207,9 +232,17 @@ verification layer (G023-G030)
   ↓
 GPU / heterogeneous workers
   ↓
+T011 Open Model Commons execution
+  ↓
 federated identity + adversarial search / Sybil defenses
   ↓
 world-scale federation
+  ↓
+T012 cross-model research handoff
+  ↓
+multi-agent / long-running research orchestration
+  ↓
+Distributed AI Research Laboratory
 ```
 
 Computational Memory、Exploration Atlas、LECはこの基盤と並行して研究できるが、安全な世界規模実行・共有が完成したという意味にはしない。

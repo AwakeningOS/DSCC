@@ -28,8 +28,8 @@ Windows PowerShellでは仮想環境の有効化を `.venv\Scripts\Activate.ps1`
 
 他のエージェントへは、次の文章とリポジトリを渡してください。
 
-> AGENTS.md、docs/STATUS.md、docs/ARCHITECTURE.ja.md、docs/TASKS.md、docs/GLOBAL_SCALE_CHALLENGES.ja.mdを読んでください。Open Model Commonsを扱う場合はdocs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.mdとdocs/adr/0004-open-model-commons-foundation.mdも読んでください。READYの課題を一つ選び、専用branch/worktreeで実装してください。機能を作る前に関連する公式仕様と既存コードを確認し、受入テストを追加してください。完了時に実行したコマンドと結果、未検証事項、次の担当者への引継ぎを記録し、PRを作成してください。未実装の機能を動作済みと記載せず、別のエージェントの変更を上書きしないでください。
+> AGENTS.md、docs/STATUS.md、docs/ARCHITECTURE.ja.md、docs/TASKS.md、docs/GLOBAL_SCALE_CHALLENGES.ja.mdを読んでください。最終目標はdocs/proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.mdです。Open Model Commonsを扱う場合はdocs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.mdとdocs/adr/0004-open-model-commons-foundation.mdも読んでください。READYの課題を一つ選び、専用branch/worktreeで実装してください。機能を作る前に関連する公式仕様と既存コードを確認し、受入テストを追加してください。完了時に実行したコマンドと結果、未検証事項、次の担当者への引継ぎを記録し、PRを作成してください。未実装の機能を動作済みと記載せず、別のエージェントの変更を上書きしないでください。
 
 ## 目指す到達点
 
-通常のデスクトップアプリとして、共有容量・利用時間・計算許可を選ぶ画面を作ります。その背後に、研究資産の保存、接続先の発見、実行要求の受付、実行環境の隔離、結果の検証を置きます。参加者が増える前でも個人の研究ノートとして使え、参加者が増えたら同じ資産を交換できる設計です。段階ごとの到達条件は `docs/ROADMAP.md` にあります。
+通常のデスクトップアプリとして、共有容量・利用時間・計算許可を選ぶ画面を作ります。その背後に、研究資産の保存、接続先の発見、実行要求の受付、実行環境の隔離、結果の検証を置きます。さらにOpen Model Commonsでmodel/computeを共有し、その上にDistributed AI Research Laboratoryを構成します。最終的には、世界中のクローズAI、オープンAI、人間が同じ研究Artifactを引き継ぎ、文献調査、仮説、実験、評価、model改良を共同で継続できる分散研究所を目指します。段階ごとの到達条件は `docs/ROADMAP.md` にあります。
