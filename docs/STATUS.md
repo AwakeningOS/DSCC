@@ -24,7 +24,7 @@ The source tree includes an English README, Japanese product design and start gu
 | Open Model Commons execution | Model/block/capability/training metadata and planning only; no distributed inference or training | T011 |
 | Self-improvement | Research-history storage possible; no unattended model training or propagation | Later explicitly authorized workflows |
 
-`reports/validation.md` and machine-readable reports describe only commands actually run. A committed CI workflow is not evidence of a successful GitHub Actions run; consult the Actions results for the relevant commit. Passing local tests is not a security proof or a performance benchmark.
+`reports/validation.md` and `reports/omc_foundation_validation.md` describe only commands actually run. A committed CI workflow is not evidence of a successful GitHub Actions run; consult the Actions results for the relevant commit. Passing local tests is not a security proof or a performance benchmark.
 
 ## Useful first collaboration
 
