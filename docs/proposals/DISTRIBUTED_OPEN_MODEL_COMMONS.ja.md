@@ -2,14 +2,14 @@
 
 ## DSCC Distributed Open Model Commons — 公共推論・ボランティア計算・世界分散プレ学習の長期構想
 
-状態: **長期目標／設計提案。現行DSCCには分散推論・分散学習・GPU workerは未実装。**  
+状態: **長期model/compute層の設計提案。DSCC全体の最終目標は Distributed AI Research Laboratory。現行DSCCには分散推論・分散学習・GPU workerは未実装。**  
 作成日: 2026-09-20  
 DSCC構想・問題提起: Yusuke Maeda  
 関連: [Architecture](../ARCHITECTURE.ja.md)、[Roadmap](../ROADMAP.md)、[世界規模化の未解決課題](../GLOBAL_SCALE_CHALLENGES.ja.md)、[Computational Memory](COMPUTATIONAL_MEMORY.ja.md)、[Exploration Atlas](EXPLORATION_ATLAS.ja.md)、[Latent Experience Capsule](LATENT_EXPERIENCE.ja.md)
 
 ## 1. 目標
 
-DSCCの長期目標の一つとして、**オープンなLLMを、世界中の参加者が少しずつ提供する計算資源で共同利用・共同開発できる公共計算基盤**を置く。
+DSCCのmodel/compute層として、**オープンなLLMを、世界中の参加者が少しずつ提供する計算資源で共同利用・共同開発できる公共計算基盤**を置く。この層の上に、closed AI・open AI・人間がAI研究そのものを共同で進める [Distributed AI Research Laboratory](DISTRIBUTED_AI_RESEARCH_LAB.ja.md) を構成する。
 
 対象は企業の非公開モデルを複製することではない。モデル、データ、コード、ライセンスが共有可能な範囲で、公開されたモデルとDSCC上で共同開発したモデルを扱う。
 
@@ -575,6 +575,6 @@ owner-controlled permission
 
 この文書で追加するのは実装ではなく、DSCCの長期的な目標を明文化したことである。
 
-**DSCCは、研究資産を共有するP2P基盤から、将来的にはオープンLLMを誰でも利用でき、世界中の参加者が計算資源と研究経験を持ち寄って共同でモデルを育てられるOpen Model Commonsへ拡張する。**
+**Open Model Commonsは、DSCCをオープンLLMの共同利用・共同学習基盤へ拡張し、最終的なDistributed AI Research Laboratoryへmodel、checkpoint、training、inference、volunteer computeを提供する。**
 
 現在のM0、P2P、sandbox、GPU、verificationの未実装状態は変わらない。各段階は、既存研究を再利用しつつ、実機・実ネットワーク・敵対条件で確認できたものだけを実装済みとする。
