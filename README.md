@@ -2,7 +2,7 @@
 
 **Local AI. Shared scientific experience. Participant-owned compute.**
 
-DSCC Desktop is the application project for **Distributed Scientific Cognition Commons**, proposed by **Yusuke Maeda**. The target product lets a person connect a local AI application, select research assets to share, and contribute explicitly authorized storage or computation. Models and computers may change while research artifacts remain reusable.
+DSCC Desktop is the application project for **Distributed Scientific Cognition Commons**, proposed by **Yusuke Maeda**. The target product lets a person connect a local AI application, select research assets to share, and contribute explicitly authorized storage or computation. Models and computers may change while research artifacts remain reusable. The long-term Open Model Commons direction also treats open-model weights, compute capabilities and training history as reusable research assets so community inference and model development can grow on the same provenance layer.
 
 [Concept paper — DOI: 10.5281/zenodo.22782576](https://doi.org/10.5281/zenodo.22782576) · [日本語ガイド](docs/START_HERE.ja.md) · [Architecture](docs/ARCHITECTURE.ja.md) · [Development status](docs/STATUS.md) · [Agent instructions](AGENTS.md) · [Development issues](https://github.com/AwakeningOS/DSCC/issues)
 
@@ -16,8 +16,11 @@ This is **a tested local foundation, not a released P2P/GPU-sharing desktop app*
 * Owner-approved local computation using one built-in deterministic integer-analysis tool.
 * A small MCP stdio server: search, read, record, verify, inspect tools, submit a pending job, and inspect job status. Models cannot approve/run jobs through this adapter.
 * A one-person, three-logical-node demo and automated tests, including subprocess MCP exchanges.
+* A local large-block store for immutable model-weight/checkpoint shards addressed by CID.
+* Versioned Open Model Commons profiles for model manifests, compute capabilities and training-run provenance.
+* A deterministic local inference-placement planner that can propose single-device or multi-shard placement from recorded capabilities without executing a model.
 
-**Not implemented:** internet P2P, NAT traversal, remote jobs, GPU execution, arbitrary-code sandboxes, payments, native desktop UI, installers, or unattended model-development loops. Host applications (LM Studio/Codex) have not been launched here. See `reports/validation.md` for the exact tests actually run.
+**Not implemented:** internet P2P, NAT traversal, remote jobs, actual model loading/inference, GPU execution, distributed training/pre-training, arbitrary-code sandboxes, payments, native desktop UI, installers, or unattended model-development loops. Host applications (LM Studio/Codex) have not been launched here. See `reports/validation.md` for the exact tests actually run.
 
 ## Quick start
 
@@ -47,6 +50,19 @@ python -m dscc --home ~/.dscc status
 ```
 
 Run `python -m dscc --help` for owner-only job approval, bundle export/import and audit inspection. Never place private keys or the live `.dscc` directory in Git.
+
+### Open Model Commons local foundation
+
+Large model bytes are imported separately from signed metadata:
+
+```sh
+python -m dscc --home ~/.dscc block-add --file ./model-00001-of-00002.safetensors
+python -m dscc --home ~/.dscc model-record --file ./model_profile.json --license Apache-2.0
+python -m dscc --home ~/.dscc capability-record --file ./capability_profile.json
+python -m dscc --home ~/.dscc plan-inference --model-cid MODEL_CID --capability-cid CAPABILITY_CID
+```
+
+Example profile shapes are in `examples/omc/`. The planner only returns a placement proposal; it does not contact peers, reserve hardware or execute model code. Artifact bundles currently transfer signed metadata only, not large model blocks.
 
 ## Connect an AI application
 
