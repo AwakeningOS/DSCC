@@ -26,11 +26,11 @@ Parents are at most 32 unique CIDs and must be present and valid before insertio
 
 ## 3. Local storage and events
 
-`catalog.sqlite3` currently holds both immutable envelope bytes and rebuildable metadata in separate columns. It is the local source store for M0; a separate block-store adapter is planned. Every read of a record verifies its CID, canonical encoding, signature and manifest. Keyword-search hits are metadata hints and are revalidated on fetch.
+`catalog.sqlite3` holds immutable signed envelope bytes and rebuildable metadata in separate columns. Large immutable binary payloads such as model-weight shards use a separate local `blocks/raw/` store keyed by the same CIDv1/raw/sha2-256 profile. Large blocks are not signed artifacts by themselves; signed manifests reference their CIDs, sizes, formats and provenance. Every artifact read verifies its CID, canonical encoding, signature and manifest. Every explicit block verification re-hashes the stored bytes. Keyword-search hits are metadata hints and are revalidated on fetch.
 
 Writes use SQLite `BEGIN IMMEDIATE` transactions. Artifact insertion and event insertion commit atomically. Events use the separate `DSCC-EVENT-SEED-v1\0` signature domain and a previous-event CID, sequence number, timestamp, event name and structured data. Audit verifies the chain currently retained. It cannot detect deletion of an entire history tail without an independently retained head, and cannot protect against an attacker controlling the same OS account and signing key.
 
-There are limits of 10,000 artifacts and 10,000 jobs. The configured quota counts logical envelope/event/specification bytes. It is **not** a hard filesystem quota or RAM/CPU limit, and SQLite pages/journals can exceed it. Restore capacity before attempting job recovery after storage exhaustion. No background cleanup or retention guarantee is implemented.
+There are limits of 10,000 artifacts and 10,000 jobs. The metadata quota counts logical envelope/event/specification bytes. A separate configured block quota counts stored large-block payload bytes before import. Neither is a complete filesystem, RAM, CPU, GPU or power quota: filesystem metadata, SQLite pages/journals and temporary operating-system behavior can exceed the reported logical values. Restore capacity before attempting job recovery after storage exhaustion. No background cleanup, replication, remote pinning or retention guarantee is implemented.
 
 ## 4. Explicit bundle exchange
 
@@ -38,7 +38,7 @@ Export is an owner CLI operation. It creates a JSON bundle with `schema: dscc.bu
 
 Import accepts only signatures belonging to the importing node or the owner-supplied trust-key set. It rejects altered content, duplicate CIDs, missing parents and unrelated hidden extra records. Validation precedes a transactional topological insert, so a rejected bundle does not partially enter the store. Imported content is never executed. Requiring an explicitly trusted key limits accidental intake, but a trusted signer can still publish false or harmful research content.
 
-File exchange is not P2P networking. The future peer transport reuses immutable-byte checks while adding authenticated peers, consent scopes, bandwidth limits, chunked transport, disconnect handling and explicit publication.
+File exchange is not P2P networking. Seed artifact bundles do **not** embed Open Model Commons large blocks; model manifests may therefore import with missing local weight CIDs. The future peer transport reuses immutable-byte checks while adding authenticated peers, consent scopes, bandwidth limits, chunked large-block transport, resume, availability/repair, disconnect handling and explicit publication.
 
 ## 5. Local computation
 
@@ -66,12 +66,33 @@ Implemented methods: `initialize`, `ping`, `tools/list`, `tools/call`, `resource
 | inspect_tools | Return the built-in tool contract |
 | submit_job | Create a pending job only |
 | job_status | Read a job specification/state |
+| record_open_model | Validate and store a local OMC model manifest; does not upload weights or execute a model |
+| inspect_open_model | Read an OMC model manifest and report local weight-block availability |
+| record_compute_capability | Store an owner-signed capability/policy record; does not publish or authorize remote execution |
+| record_training_run | Store a training observation; does not start training |
+| plan_open_model_inference | Create a deterministic non-executing placement proposal from model/capability records |
 
-There is no MCP tool for owner approval, execution, export, key management, resource-policy changes or remote publication. However, the MCP process runs as the same OS user in M0 and loads the node key. An agent with a separate unrestricted shell can bypass interface-level distinctions. Strong owner/agent/process separation is T001, not a feature of this seed.
+There is no MCP tool for owner approval, execution, export, key management, large-block upload, resource-policy activation or remote publication. However, the MCP process runs as the same OS user in M0 and loads the node key. An agent with a separate unrestricted shell can bypass interface-level distinctions. Strong owner/agent/process separation is T001, not a feature of this seed.
 
 Resources use `dscc://artifact/{cid}`. Resource listing is CID-ordered in pages of 100 and uses the last CID as a cursor. It is not a snapshot under concurrent writes; restart listing for a complete current view. Keyword search returns up to its requested limit (maximum 100). Access to a project means access to all of that node's research records; use separate node directories for confidentiality boundaries until finer-grained authorization is implemented.
 
-## 7. Extension contracts
+## 7. Open Model Commons local foundation
+
+The OMC foundation follows ADR-0004 and keeps the existing seed artifact kinds and signed-envelope bytes unchanged. It adds three versioned payload profiles:
+
+- `dscc.omc.model/0.1` in `MemoryCapsule.data.omc_model`.
+- `dscc.omc.capability/0.1` in `PolicyProfile.data.omc_capability`.
+- `dscc.omc.training-run/0.1` in `ExperimentRun.data.omc_training_run`.
+
+A model profile contains architecture/tokenizer identity, immutable weight-block references, runtime requirements and artifact provenance. Weight blocks may be locally absent; `model-inspect` reports that condition instead of pretending a complete model copy exists.
+
+A capability profile records devices, usable-memory claims, supported precisions/runtime tags, coarse network measurements and owner policy. It is a signed statement by the local node, not a hardware attestation, benchmark proof, peer-discovery record or promise of current availability.
+
+A training-run profile records a parent model, dataset/code/capability artifact CIDs, method, token count, state, metrics and checkpoint-block references. Recording such a profile is provenance only. The foundation contains no trainer and never converts a recorded `succeeded` field into proof that DSCC executed or verified the training.
+
+The local inference planner consumes one model profile and explicit capability-record CIDs. It may propose a single-device replica or shard placement across compatible GPUs. Its output always records `execution_authorized: false` and `network_execution: false`. The planner does not contact peers, reserve devices, inspect real GPU state, load model code, move tensors or benchmark WAN latency.
+
+## 8. Extension contracts
 
 A peer adapter transfers immutable encoded blocks and signed manifests; it cannot alter local policy. A runtime adapter consumes admitted jobs and returns execution observations, not authoritative scientific truth. A verifier emits method/evidence/limits. A catalog adapter provides disposable search hints. A desktop UI requests owner actions over authenticated local IPC. MCP remains one client of the application service, not the service's authority model.
 
