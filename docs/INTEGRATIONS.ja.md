@@ -19,7 +19,7 @@ Codexには生成された `codex.config.toml` の `[mcp_servers.dscc]` 項目�
 
 「DSCCの状態を確認し、materialsを含む研究記録を検索して。見つかった記録の出典と親CIDを示して。新しい観察は、それまでの記録を親としてDSCCへ保存して。」
 
-利用できるツールは `node_status`、`search_assets`、`fetch_artifact`、`record_artifact`、`verify_artifact`、`inspect_tools`、`submit_job`、`job_status`。ジョブは提出時点でpendingになり、MCP経由の承認・実行・外部公開は提供しない。実行はowner CLIで明示する。
+利用できる基本ツールは `node_status`、`search_assets`、`fetch_artifact`、`record_artifact`、`verify_artifact`、`inspect_tools`、`submit_job`、`job_status`。Open Model Commons向けに `record_open_model`、`inspect_open_model`、`record_compute_capability`、`record_training_run`、`plan_open_model_inference` も使える。これらはmetadataの記録・検査・配置案の作成だけを行う。weight blockの追加、ジョブ承認、model実行、GPU割当、外部公開はMCP経由では提供しない。
 
 ## 受入確認
 

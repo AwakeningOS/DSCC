@@ -7,6 +7,7 @@
 3. `docs/PROTOCOL.md` and `docs/SOURCE_TRACEABILITY.md` — versioned contracts and original paper.
 4. `docs/TASKS.md`, then the chosen task file — dependencies and acceptance tests.
 5. `docs/GLOBAL_SCALE_CHALLENGES.ja.md` — unresolved blockers for a world-scale DSCC. Promote a challenge into an Issue/task only with explicit scope and acceptance evidence.
+6. For model distribution/training work, read `docs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md`, ADR-0004 and T011 before changing OMC contracts.
 
 The original concept author is **Yusuke Maeda**. Preserve the project's model-agnostic, local-first, voluntary P2P direction. Do not turn it into a required proprietary cloud. Do not claim DSCC networking, GPU sharing, sandboxing, payments or research superiority is implemented unless it is actually demonstrated.
 

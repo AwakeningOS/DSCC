@@ -14,6 +14,8 @@
 | MCP local model connection | stdio adapter | Protocol-subset tests implemented; installed host-app tests pending. |
 | RO-Crate / CWL / PROV / WorldSnapshot | scientific adapters | T007/T008. |
 | Contribution credits / payments | optional economy | Design only; no financial claims or token launch. |
+| Open-model distribution foundation | OMC profiles + local raw block store | Model/capability/training metadata and local block integrity implemented; no peer transfer or model execution. |
+| Distributed open-model compute | planner + future runtime/transport | Non-executing local placement planning implemented; real inference/training is T011 and dependent tasks. |
 | Agent cooperation in development | AGENTS + tasks + PR templates | Prepared artifacts; no background agent has been launched. |
 
 The repository does not silently replace the paper. The M0 seed is a concrete implementation checkpoint inside its broader direction. All later features have independent acceptance gates.

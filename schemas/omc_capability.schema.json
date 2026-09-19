@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.invalid/schemas/omc-capability-0.1",
+  "title": "DSCC Open Model Commons compute capability profile 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","node_label","devices","network","policy"],
+  "properties": {
+    "schema":{"const":"dscc.omc.capability/0.1"},
+    "node_label":{"type":"string","minLength":1,"maxLength":240},
+    "devices":{
+      "type":"array","minItems":1,"maxItems":128,
+      "items":{
+        "type":"object","additionalProperties":false,
+        "required":["id","class","vendor","model","usable_memory_bytes","supported_precisions","runtime_tags"],
+        "properties":{
+          "id":{"type":"string","minLength":1,"maxLength":128},
+          "class":{"enum":["gpu","cpu","storage","relay"]},
+          "vendor":{"type":"string","minLength":1,"maxLength":128},
+          "model":{"type":"string","minLength":1,"maxLength":240},
+          "usable_memory_bytes":{"type":"integer","minimum":0},
+          "supported_precisions":{"type":"array","uniqueItems":true,"items":{"enum":["fp32","fp16","bf16","int8","int4","other"]}},
+          "runtime_tags":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}}
+        }
+      }
+    },
+    "network":{
+      "type":"object","additionalProperties":false,"required":["class","down_mbps","up_mbps","latency_ms"],
+      "properties":{
+        "class":{"type":"string","minLength":1,"maxLength":64},
+        "down_mbps":{"type":"integer","minimum":0},
+        "up_mbps":{"type":"integer","minimum":0},
+        "latency_ms":{"type":"integer","minimum":0}
+      }
+    },
+    "policy":{
+      "type":"object","additionalProperties":false,
+      "required":["accepted_job_classes","public_inference","public_training","max_job_seconds"],
+      "properties":{
+        "accepted_job_classes":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}},
+        "public_inference":{"type":"boolean"},
+        "public_training":{"type":"boolean"},
+        "max_job_seconds":{"type":"integer","minimum":1}
+      }
+    }
+  }
+}

@@ -14,9 +14,12 @@ Choose one READY task per branch. Check the matching GitHub Issue and coordinate
 | [T008](tasks/T008.md) | Reproducible shared-world example | BLOCKED | T003, T007 |
 | [T009](tasks/T009.md) | Adversarial verification and release audit | READY | — |
 | [T010](tasks/T010.md) | Cross-domain Exploration Atlas | READY for contracts/index | T007 coordination; T001/T002/T004/T005 for later integration |
+| [T011](tasks/T011.md) | Distributed Open Model Commons execution | BLOCKED for public execution; isolated work READY | T001/T003/T005/T006/T009 for full execution |
 
 T001, T002, T003, T005, T007 and T009 can start from M0. Shared schema/core edits require coordination. Start the security reviewer on a different worktree from the implementer.
 
 T010 adds the cross-domain exploration-map proposal and a dedicated implementation lane. It does not mark T007 complete or turn the synthetic contract helpers into a released retrieval feature. See [Exploration Atlas](proposals/EXPLORATION_ATLAS.ja.md).
+
+T011 starts from the implemented local OMC contracts, block store and non-executing planner. Public model execution remains blocked on owner/service separation, isolated runtime, peer transport, GPU work and adversarial verification. See [Distributed Open Model Commons](proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md).
 
 Issues: https://github.com/AwakeningOS/DSCC/issues

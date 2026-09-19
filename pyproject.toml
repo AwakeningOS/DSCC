@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dscc-desktop"
-version = "0.0.1"
-description = "Local-first DSCC research-asset foundation and MCP adapter"
+version = "0.1.0a1"
+description = "Local-first DSCC research, Open Model Commons and MCP foundation"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}

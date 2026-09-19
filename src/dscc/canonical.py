@@ -78,9 +78,15 @@ def parse_json(data: bytes | str, *, max_bytes: int = MAX_OBJECT_BYTES) -> Any:
         raise ValueError("invalid JSON document") from exc
 
 
-def cid_for(data: bytes) -> str:
-    raw = PREFIX + hashlib.sha256(data).digest()
+def cid_for_digest(digest: bytes) -> str:
+    if not isinstance(digest, bytes) or len(digest) != 32:
+        raise ValueError("sha2-256 digest must be exactly 32 bytes")
+    raw = PREFIX + digest
     return "b" + base64.b32encode(raw).decode("ascii").lower().rstrip("=")
+
+
+def cid_for(data: bytes) -> str:
+    return cid_for_digest(hashlib.sha256(data).digest())
 
 
 def validate_cid(cid: str) -> str:

@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from .blocks import BlockStore
 from .canonical import (MAX_BUNDLE_BYTES, MAX_OBJECT_BYTES, canonical_bytes, cid_for,
                         parse_json, validate_cid)
 from .identity import KEY_RE, generate_key, load_key, public_hex, sign, verify
@@ -33,10 +34,12 @@ def _bounded_file(path: Path, limit: int) -> bytes:
     return raw
 
 
-def init_node(home: Path, quota_mb: int = 128) -> "Node":
+def init_node(home: Path, quota_mb: int = 128, block_quota_gb: int = 16) -> "Node":
     home = home.expanduser().resolve()
     if not 1 <= quota_mb <= 1024 * 1024:
         raise ValueError("quota_mb must be between 1 and 1048576")
+    if not 1 <= block_quota_gb <= 1024 * 1024:
+        raise ValueError("block_quota_gb must be between 1 and 1048576")
     if (home / "config.json").exists():
         return Node(home)
     if (home / "signing.key").exists() or (home / "catalog.sqlite3").exists():
@@ -44,7 +47,11 @@ def init_node(home: Path, quota_mb: int = 128) -> "Node":
     home.mkdir(parents=True, exist_ok=True, mode=0o700)
     home.chmod(0o700)
     generate_key(home / "signing.key")
-    config = {"schema": "dscc.node.seed/0.1", "storage_quota_bytes": quota_mb * 1024 * 1024}
+    config = {
+        "schema": "dscc.node.seed/0.1",
+        "storage_quota_bytes": quota_mb * 1024 * 1024,
+        "block_quota_bytes": block_quota_gb * 1024 * 1024 * 1024,
+    }
     with (home / "config.json").open("x", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
     return Node(home)
@@ -59,6 +66,10 @@ class Node:
         self.quota = config.get("storage_quota_bytes")
         if type(self.quota) is not int or not 1_048_576 <= self.quota <= 2**40:
             raise ValueError("invalid storage quota")
+        self.block_quota = config.get("block_quota_bytes", self.quota)
+        if type(self.block_quota) is not int or not 1_048_576 <= self.block_quota <= 2**60:
+            raise ValueError("invalid block storage quota")
+        self.blocks = BlockStore(self.home, self.block_quota)
         self.key = load_key(self.home / "signing.key")
         self.public_key = public_hex(self.key)
         self.db = self.home / "catalog.sqlite3"
@@ -199,12 +210,28 @@ class Node:
 
     def status(self) -> dict[str, Any]:
         with self._connection() as c:
-            return {"version": "0.0.1", "public_key": self.public_key,
-                    "artifacts": c.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0],
-                    "jobs": c.execute("SELECT COUNT(*) FROM jobs").fetchone()[0],
-                    "logical_bytes": self._usage(c), "logical_quota_bytes": self.quota,
-                    "p2p": False, "gpu_execution": False, "arbitrary_code": False,
-                    "runtime": "trusted-builtin-only", "sharing": "explicit-file-export-only"}
+            return {
+                "version": "0.1.0a1",
+                "public_key": self.public_key,
+                "artifacts": c.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0],
+                "jobs": c.execute("SELECT COUNT(*) FROM jobs").fetchone()[0],
+                "logical_bytes": self._usage(c),
+                "logical_quota_bytes": self.quota,
+                **self.blocks.status(),
+                "open_model_commons": {
+                    "model_manifests": True,
+                    "large_local_blocks": True,
+                    "capability_records": True,
+                    "inference_planning": True,
+                    "distributed_inference_execution": False,
+                    "distributed_training_execution": False,
+                },
+                "p2p": False,
+                "gpu_execution": False,
+                "arbitrary_code": False,
+                "runtime": "trusted-builtin-only",
+                "sharing": "explicit-file-export-only",
+            }
 
     def verify_artifact(self, cid: str) -> dict[str, Any]:
         with self._connection() as c:

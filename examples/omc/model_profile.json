@@ -1,0 +1,29 @@
+{
+  "schema": "dscc.omc.model/0.1",
+  "name": "DSCC tiny demonstration model",
+  "revision": "demo-1",
+  "architecture": {
+    "family": "transformer-decoder",
+    "config": {"layers": 2, "hidden_size": 64}
+  },
+  "tokenizer": {"id": "example-tokenizer", "revision": "1"},
+  "weights": [
+    {
+      "cid": "bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku",
+      "bytes": 1,
+      "format": "safetensors",
+      "name": "model-00001-of-00001.safetensors"
+    }
+  ],
+  "runtime": {
+    "minimum_memory_bytes": 1024,
+    "precisions": ["fp32"],
+    "frameworks": ["reference-only"]
+  },
+  "provenance": {
+    "parent_model_cids": [],
+    "training_run_cids": [],
+    "dataset_cids": [],
+    "code_cids": []
+  }
+}

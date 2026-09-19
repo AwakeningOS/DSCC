@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.invalid/schemas/omc-training-run-0.1",
+  "title": "DSCC Open Model Commons training run profile 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","parent_model_cid","dataset_cids","code_cids","capability_cids","method","token_count","state","metrics","checkpoint_blocks"],
+  "properties": {
+    "schema":{"const":"dscc.omc.training-run/0.1"},
+    "parent_model_cid":{"type":"string","pattern":"^b[a-z2-7]{58}$"},
+    "dataset_cids":{"$ref":"#/$defs/cids"},
+    "code_cids":{"$ref":"#/$defs/cids"},
+    "capability_cids":{"$ref":"#/$defs/cids"},
+    "method":{"type":"string","minLength":1,"maxLength":240},
+    "token_count":{"type":"integer","minimum":0},
+    "state":{"enum":["planned","running","succeeded","failed","interrupted"]},
+    "metrics":{"type":"object"},
+    "checkpoint_blocks":{
+      "type":"array","maxItems":4096,
+      "items":{
+        "type":"object","additionalProperties":false,"required":["cid","bytes","name"],
+        "properties":{
+          "cid":{"type":"string","pattern":"^b[a-z2-7]{58}$"},
+          "bytes":{"type":"integer","minimum":1},
+          "name":{"type":"string","minLength":1,"maxLength":240}
+        }
+      }
+    }
+  },
+  "$defs":{
+    "cids":{"type":"array","maxItems":128,"uniqueItems":true,"items":{"type":"string","pattern":"^b[a-z2-7]{58}$"}}
+  }
+}

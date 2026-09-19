@@ -88,3 +88,16 @@ V0は決定的再実行、V1は数値許容差と不変量、V2は確率的再�
 ## 12. 開発と検証の方針
 
 完成形の自由度を保ち、最初に確かめる接続だけを実装する。後段の機能を「比較しやすいから」制限しない。GPU性能やAI能力の主張は、実測のコスト・速度・結果と対応させる。CIでは正当性・境界・互換性を検証し、性能優位や家庭ネットワークでの到達性は別実験として記録する。採用した設計はADR、未確定の設計はproposal、実行済みの確認はvalidation reportに分けて残す。
+
+
+## 13. Open Model Commons foundation
+
+長期の [Distributed Open Model Commons](proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md) に向けて、モデル自体も研究資産として扱う。ただし巨大weightを既存の1 MiB署名JSONへ押し込まない。署名付きModel manifestが、別のcontent-addressed large blockを参照する二層構造にする。
+
+現行実装はローカルblock store、Model/ComputeCapability/TrainingRun profile、block availability検査、非実行のinference placement plannerまでである。plannerの出力はjobでもcapability tokenでもなく、実行権限を持たない。
+
+完成形では、peer transportがlarge blockのchunked transferとrepairを担い、runtime adapterがowner-approved model jobを隔離実行し、schedulerが実測capabilityとnetwork条件から配置を決め、verifierが推論・学習の結果を別々に検査する。
+
+世界規模pre-trainingでは、遠隔GPUを一台の共有VRAMとして扱わない。local island内の高速parallelismと、island間のlow-communication optimizationを分離する。既知の分散学習研究を再利用し、consumer GPUのchurn、heterogeneity、malicious update、dataset provenance、checkpoint forkをDSCC固有の検証対象にする。
+
+Open Model Commonsを導入しても、node ownerの停止権、resource budget、private data境界、実行承認を弱めない。model research agentが新しいcheckpointを提案できても、それだけでrelease権限や追加resource権限を取得しない。
