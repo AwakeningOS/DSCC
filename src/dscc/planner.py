@@ -34,6 +34,8 @@ def plan_inference(model: dict[str, Any],
                 continue
             if chosen_precision not in device["supported_precisions"]:
                 continue
+            if not set(model["runtime"]["frameworks"]) & set(device["runtime_tags"]):
+                continue
             devices.append({
                 "capability_cid": capability_cid,
                 "device_id": device["id"],
