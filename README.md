@@ -1,8 +1,8 @@
 # DSCC Desktop
 
-**Local AI. Shared scientific experience. Participant-owned compute.**
+**Shared scientific experience. Participant-owned compute. A distributed laboratory for AI research.**
 
-DSCC Desktop is the application project for **Distributed Scientific Cognition Commons**, proposed by **Yusuke Maeda**. The target product lets a person connect a local AI application, select research assets to share, and contribute explicitly authorized storage or computation. Models and computers may change while research artifacts remain reusable. The long-term Open Model Commons direction also treats open-model weights, compute capabilities and training history as reusable research assets so community inference and model development can grow on the same provenance layer.
+DSCC Desktop is the application project for **Distributed Scientific Cognition Commons**, proposed by **Yusuke Maeda**. Its final goal is a **Distributed AI Research Laboratory**: a world-scale research commons where closed AI systems, open models, local agents and humans can continue the same AI-research projects through shared artifacts, experiments, evaluations and compute. Open Model Commons is the model/compute layer beneath that goal, while DSCC's persistent provenance layer lets research survive changes of model, provider, machine and participant.
 
 [Concept paper — DOI: 10.5281/zenodo.22782576](https://doi.org/10.5281/zenodo.22782576) · [日本語ガイド](docs/START_HERE.ja.md) · [Architecture](docs/ARCHITECTURE.ja.md) · [Development status](docs/STATUS.md) · [Agent instructions](AGENTS.md) · [Development issues](https://github.com/AwakeningOS/DSCC/issues)
 
@@ -78,7 +78,7 @@ Give a coding agent `AGENTS.md`, then choose one ready task from `docs/TASKS.md`
 
 The repository is **AwakeningOS/DSCC**. The application/package name remains `dscc-desktop`. See [GitHub collaboration setup](docs/GITHUB_SETUP.ja.md) for instructions. Repository rules and required reviews must be enabled separately by the owner; committing a workflow file does not configure branch protection.
 
-Long-term blockers between the current local foundation and a world-scale DSCC are tracked in the [世界規模化に向けた未解決課題レジストリ](docs/GLOBAL_SCALE_CHALLENGES.ja.md). It is a living backlog for future agents and contributors: an item remains unresolved until its implementation, threat assumptions, measurements and remaining limits are recorded.
+Long-term blockers between the current local foundation and the Distributed AI Research Laboratory are tracked in the [世界規模化に向けた未解決課題レジストリ](docs/GLOBAL_SCALE_CHALLENGES.ja.md). It is a living backlog for future agents and contributors: an item remains unresolved until its implementation, assumptions, measurements and remaining limits are recorded.
 
 ## Design proposals
 
@@ -87,6 +87,8 @@ Long-term blockers between the current local foundation and a world-scale DSCC a
 [分野を越える探索地図 — Exploration Atlas](docs/proposals/EXPLORATION_ATLAS.ja.md) extends that direction to trial-and-error paths across engineering, model development and everyday experience. It specifies typed episodes, independent semantic/structural retrieval, explicit analogy mappings, trial-backed transfer reports and source-linked motifs. [Implementation contracts](docs/proposals/exploration-atlas/IMPLEMENTATION.md) and [T010](docs/tasks/T010.md) include draft schemas, synthetic examples and executable contract tests. **The atlas application, semantic extraction, retrieval quality and map UI are not yet implemented or demonstrated.**
 
 [みんなで使い、みんなで育てるオープンLLM計算コモンズ — Distributed Open Model Commons](docs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md) defines a long-term DSCC goal: public inference for open models, voluntary compute contribution, globally distributed low-communication training, and provenance-preserving community model research. It separates results already demonstrated by prior decentralized-training research from the additional heterogeneous, adversarial and public-network problems DSCC would still need to solve. **Proposal only; DSCC currently has no distributed inference, GPU worker or model-training implementation.**
+
+[世界中のAIと人間がAIを共同研究する分散研究所 — Distributed AI Research Laboratory](docs/proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md) defines the final DSCC goal. Closed AI systems can participate as research agents through APIs/tools without exposing proprietary weights; open models can participate both as researchers and as research subjects; humans contribute questions, experiments, evaluation and compute. Shared research artifacts connect literature review, hypotheses, experiments, failures, evaluation and model lineage across participants. **This is the final architectural goal, not a claim that autonomous distributed AI research is implemented today.**
 
 ## Attribution and licensing
 
