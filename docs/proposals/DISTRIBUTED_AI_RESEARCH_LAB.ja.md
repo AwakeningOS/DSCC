@@ -73,7 +73,41 @@ DSCC研究記憶へ保存
 
 ---
 
-## 2. Open Model Commonsは最終形ではなく計算・モデル層
+## 2. 既知研究とDSCCの位置
+
+AIが研究工程を自動化する試みはすでに進んでいる。
+
+- **The AI Scientist / AI Scientist-v2 (Sakana AI)** は、機械学習研究で仮説生成、code変更、experiment実行、解析、論文執筆までを自動化し、v2ではagentic tree searchとexperiment managerを用いたend-to-end研究を報告している。  
+  https://arxiv.org/abs/2504.08066
+- **Google AI co-scientist** はGeminiを基盤とするmulti-agent systemとして、科学者のresearch objectiveに沿って仮説とresearch proposalを生成・改良する。  
+  https://arxiv.org/abs/2502.18864
+- **Agent Laboratory** はliterature review、experimentation、report writingを複数LLM agentで進め、人間feedbackを各段階へ入れられるresearch workflowを実装している。  
+  https://arxiv.org/abs/2501.04227
+- **FutureHouse Robin** はliterature search、data analysis、hypothesis generation、experimental planningを複数agentで統合し、end-to-end scientific discovery workflowを報告している。  
+  https://www.futurehouse.org/research/demonstrating-end-to-end-scientific-discovery-with-robin-a-multi-agent-system
+- AI Scientistの独立評価では、literature reviewとnovelty assessmentが既知概念を新規と誤判定する問題も報告されている。これは「まず既知研究を調べ、未解決点だけを実験する」research contractをDSCC側で明示する理由になる。  
+  https://arxiv.org/abs/2502.14297
+
+したがってDSCCの目標は、AI Scientistそのものを最初から再発明することではない。
+
+既存のAI Scientist / co-scientist / multi-agent research技術を利用可能なcomponentとして接続しながら、次の部分を研究対象にする。
+
+1. **異なるprovider・model・organizationをまたぐ研究継承**  
+   一つのframework内部だけでなく、closed AI、open AI、local AI、人間がArtifactを介して交代できる。
+2. **研究記憶のmodel非依存化**  
+   conversation contextや一つのagent processではなく、CID付きResearch ArtifactとResearch Stateを継承単位にする。
+3. **世界分散computeとの統合**  
+   research agentのexperimentをOpen Model Commonsのheterogeneous compute、training、inferenceへ接続する。
+4. **失敗・反証・再現まで含む共有探索履歴**  
+   最終paperだけでなく、failed experiment、branch、contradicting evidence、replicationを次のagentへ渡す。
+5. **AI研究者自身を継続的に研究対象へ戻す**  
+   model、memory、retrieval、agent orchestrationを改良し、改良されたresearch agentが次cycleへ参加する。
+
+DSCCの実質的な問いは、**既存のAI Scientistを、単一model・単一provider・単一deploymentを越えて継承可能な世界分散研究生態系へ接続できるか**である。
+
+---
+
+## 19. Open Model Commonsは最終形ではなく計算・モデル層
 
 Distributed Open Model Commonsは、この最終目標を支える重要な中間層である。
 
