@@ -70,6 +70,8 @@ Long-term blockers between the current local foundation and a world-scale DSCC a
 
 [分野を越える探索地図 — Exploration Atlas](docs/proposals/EXPLORATION_ATLAS.ja.md) extends that direction to trial-and-error paths across engineering, model development and everyday experience. It specifies typed episodes, independent semantic/structural retrieval, explicit analogy mappings, trial-backed transfer reports and source-linked motifs. [Implementation contracts](docs/proposals/exploration-atlas/IMPLEMENTATION.md) and [T010](docs/tasks/T010.md) include draft schemas, synthetic examples and executable contract tests. **The atlas application, semantic extraction, retrieval quality and map UI are not yet implemented or demonstrated.**
 
+[みんなで使い、みんなで育てるオープンLLM計算コモンズ — Distributed Open Model Commons](docs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md) defines a long-term DSCC goal: public inference for open models, voluntary compute contribution, globally distributed low-communication training, and provenance-preserving community model research. It separates results already demonstrated by prior decentralized-training research from the additional heterogeneous, adversarial and public-network problems DSCC would still need to solve. **Proposal only; DSCC currently has no distributed inference, GPU worker or model-training implementation.**
+
 ## Attribution and licensing
 
 Original DSCC concept: Yusuke Maeda. This initial code and new implementation documents are provided under the MIT license in `LICENSE`. Material in `docs/reference/` is retained from the supplied DSCC research packet with separate attribution and provenance; third-party software and future research assets retain their own licenses. The concept-paper DOI identifies the paper, not a software-release DOI.
