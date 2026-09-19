@@ -128,6 +128,31 @@ G048は一項目にまとめて終了させるものではない。実装段階�
 
 ---
 
+## H. Distributed Open Model Commons固有の課題
+
+長期構想は [Distributed Open Model Commons](proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md) を参照する。G031-G036の異種計算・WAN trainingを前提に、公共推論・ボランティアpre-training・共同モデル開発として特に残る問題を以下へ追加する。
+
+| ID | 問題 | 必要になる能力・候補技術 | 種別 | 優先 |
+|---|---|---|---|---|
+| G049 | 巨大model/checkpointをcontent-addressedに分割・再構成する | large-object manifest、weight sharding、partial fetch、replication、repair、license metadata | Engineering | P1 |
+| G050 | 分散推論でmodel shardやreplicaがjoin/leaveしてもserviceを継続する | topology-aware routing、replication、rebalancing、session affinity、failure recovery | Mixed | P1 |
+| G051 | WAN上のtoken-by-token通信latency | regional inference islands、replicas、pipeline/expert placement、latency-aware execution plans | Research | P1 |
+| G052 | public inferenceでprompt / KV / hidden stateがvolunteer operatorへ漏れる | privacy class、trusted execution、confidential compute、routing policy、必要に応じた暗号技術 | Research | P0 |
+| G053 | heterogeneous consumer GPUでtraining roleを割り当てる | memory-aware sharding、asymmetric parallelism、capability benchmarks、dynamic island formation | Research | P1 |
+| G054 | churn・非同期・stale update下でpre-trainingを安定収束させる | low-communication optimization、elastic membership、staleness control、checkpoint recovery | Research | P0 |
+| G055 | 未信頼training workerのupdateが正しいか・有害でないか検証する | selective replay、sanity checks、held-out evaluation、redundant training、update verification、poisoning/backdoor tests | Research | P0 |
+| G056 | hardware/vendor/precision差による数値挙動と収束差 | versioned runtime profiles、mixed-precision policy、cross-vendor validation、numerical drift measurement | Mixed | P1 |
+| G057 | training dataset mixを世界分散でも再現可能・合法に保つ | dataset manifests、source lineage、license/consent policy、shard identity、removal/retraction handling | Mixed | P0 |
+| G058 | checkpoint fork / promotion / rollbackを中央の単一headなしで扱う | immutable model lineage、signed mutable release labels、fork-aware governance、rollback rules | Mixed | P1 |
+| G059 | 計算量の申告と「有用な貢献」を混同しない | signed execution receipts、measured resource use、verification result、model-quality contributionを別記録にする | Research | P1 |
+| G060 | 公共モデル利用の公平性と混雑制御 | local/community policy、quotas、queueing、priority classes、複数gateway。科学的信頼やidentity scoreとは分離 | Policy / Legal + Engineering | P2 |
+| G061 | model/data/code供給網への悪意ある差し替え | signed model manifests、tool/runtime digest、checkpoint verification、TUF/Sigstore/in-toto等 | Engineering | P0 |
+| G062 | community modelのrelease判断を自動score一つへ還元しない | reproducible evaluations、multiple branches、documented promotion policy、人間/組織/agent governanceの分離 | Mixed | P1 |
+
+既存のDiLoCo、OpenDiLoCo、INTELLECT、Petals等が示した成果はこれらの一部に解決候補を与えるが、家庭の異種GPUが自由参加するDSCCネットワーク全体の実証とは扱わない。
+
+---
+
 ## 完成条件を誤らないための共通原則
 
 世界規模版では、次を別々の事実として保持する。
