@@ -6,9 +6,9 @@
 
 最初のコードでは、研究記録を保存し、検索し、署名と内容識別子を検査できます。記録は更新で上書きするのではなく、以前の記録を親として参照する新しい成果物として残します。MCP接続によって、別々のAIアプリから同じノートブックを利用できます。
 
-計算側には、整数データの件数・合計・最小・最大を求める小さな実行例があります。AIは実行要求を提出し、PCの所有者が確認してから実行します。結果は入力の識別子と実行条件を持つ研究記録として保存されます。この例の目的は計算性能の証明ではなく、依頼から記録の継承までの接続を動かすことです。
+計算側には、整数データの件数・合計・最小・最大を求める小さな実行例があります。さらにOpen Model Commonsのローカル基盤として、大きなmodel weight/checkpointを別block storeへCID保存し、署名付きModel manifest・Compute Capability・TrainingRunを記録し、複数capabilityから非実行のinference配置案を作れます。AIは実行要求を提出し、PCの所有者が確認してから実行します。結果は入力の識別子と実行条件を持つ研究記録として保存されます。この例の目的は計算性能の証明ではなく、依頼から記録の継承までの接続を動かすことです。
 
-`python -m dscc demo` は同じPCに三つの独立した保存領域と署名鍵を作ります。Aが入力を作り、Bがそれを読み込んで計算し、Cが結果と入力を読み込みます。交換には明示的なファイルbundleを使います。家庭回線越しのP2P、独立した参加者間の信頼、GPU共有を実証したものではありません。
+`python -m dscc demo` は同じPCに三つの独立した保存領域と署名鍵を作ります。Open Model Commons機能はこのdemoでmodelを実行せず、profileと配置計画の基盤として別途テストします。Aが入力を作り、Bがそれを読み込んで計算し、Cが結果と入力を読み込みます。交換には明示的なファイルbundleを使います。家庭回線越しのP2P、独立した参加者間の信頼、GPU共有を実証したものではありません。
 
 ## 起動
 
@@ -28,7 +28,7 @@ Windows PowerShellでは仮想環境の有効化を `.venv\Scripts\Activate.ps1`
 
 他のエージェントへは、次の文章とリポジトリを渡してください。
 
-> AGENTS.md、docs/STATUS.md、docs/ARCHITECTURE.ja.md、docs/TASKS.mdを読んでください。READYの課題を一つ選び、専用branch/worktreeで実装してください。機能を作る前に関連する公式仕様と既存コードを確認し、受入テストを追加してください。完了時に実行したコマンドと結果、未検証事項、次の担当者への引継ぎを記録し、PRを作成してください。未実装の機能を動作済みと記載せず、別のエージェントの変更を上書きしないでください。
+> AGENTS.md、docs/STATUS.md、docs/ARCHITECTURE.ja.md、docs/TASKS.md、docs/GLOBAL_SCALE_CHALLENGES.ja.mdを読んでください。Open Model Commonsを扱う場合はdocs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.mdとdocs/adr/0004-open-model-commons-foundation.mdも読んでください。READYの課題を一つ選び、専用branch/worktreeで実装してください。機能を作る前に関連する公式仕様と既存コードを確認し、受入テストを追加してください。完了時に実行したコマンドと結果、未検証事項、次の担当者への引継ぎを記録し、PRを作成してください。未実装の機能を動作済みと記載せず、別のエージェントの変更を上書きしないでください。
 
 ## 目指す到達点
 
