@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dscc.invalid/schemas/omc-model-0.1",
+  "title": "DSCC Open Model Commons model profile 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","name","revision","architecture","tokenizer","weights","runtime","provenance"],
+  "properties": {
+    "schema": {"const": "dscc.omc.model/0.1"},
+    "name": {"type":"string","minLength":1,"maxLength":240},
+    "revision": {"type":"string","minLength":1,"maxLength":128},
+    "architecture": {
+      "type":"object","additionalProperties":false,"required":["family","config"],
+      "properties":{"family":{"type":"string","minLength":1,"maxLength":128},"config":{"type":"object"}}
+    },
+    "tokenizer": {
+      "type":"object","additionalProperties":false,"required":["id","revision"],
+      "properties":{"id":{"type":"string","minLength":1,"maxLength":240},"revision":{"type":"string","minLength":1,"maxLength":128}}
+    },
+    "weights": {
+      "type":"array","minItems":1,"maxItems":4096,
+      "items":{
+        "type":"object","additionalProperties":false,"required":["cid","bytes","format","name"],
+        "properties":{
+          "cid":{"type":"string","pattern":"^b[a-z2-7]{58}$"},
+          "bytes":{"type":"integer","minimum":1},
+          "format":{"type":"string","minLength":1,"maxLength":64},
+          "name":{"type":"string","minLength":1,"maxLength":240}
+        }
+      }
+    },
+    "runtime": {
+      "type":"object","additionalProperties":false,"required":["minimum_memory_bytes","precisions","frameworks"],
+      "properties":{
+        "minimum_memory_bytes":{"type":"integer","minimum":1},
+        "precisions":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["fp32","fp16","bf16","int8","int4","other"]}},
+        "frameworks":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}}
+      }
+    },
+    "provenance": {
+      "type":"object","additionalProperties":false,
+      "required":["parent_model_cids","training_run_cids","dataset_cids","code_cids"],
+      "properties":{
+        "parent_model_cids":{"$ref":"#/$defs/cids"},
+        "training_run_cids":{"$ref":"#/$defs/cids"},
+        "dataset_cids":{"$ref":"#/$defs/cids"},
+        "code_cids":{"$ref":"#/$defs/cids"}
+      }
+    }
+  },
+  "$defs":{
+    "cids":{"type":"array","maxItems":128,"uniqueItems":true,"items":{"type":"string","pattern":"^b[a-z2-7]{58}$"}}
+  }
+}
