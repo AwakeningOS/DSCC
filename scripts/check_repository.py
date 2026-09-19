@@ -21,7 +21,10 @@ def main() -> None:
     required = ["README.md", "AGENTS.md", "LICENSE", "SECURITY.md", "CITATION.cff",
                 "docs/START_HERE.ja.md", "docs/STATUS.md", "docs/ARCHITECTURE.ja.md",
                 "docs/PROTOCOL.md", "docs/TASKS.md", "docs/INTEGRATIONS.ja.md",
-                "docs/GITHUB_SETUP.ja.md", "docs/SOURCE_TRACEABILITY.md"]
+                "docs/GITHUB_SETUP.ja.md", "docs/SOURCE_TRACEABILITY.md",
+                "docs/GLOBAL_SCALE_CHALLENGES.ja.md",
+                "docs/proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md",
+                "docs/adr/0004-open-model-commons-foundation.md"]
     for name in required:
         assert (ROOT / name).is_file(), f"missing {name}"
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
