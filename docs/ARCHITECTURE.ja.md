@@ -2,7 +2,7 @@
 
 ## 1. 製品の目的
 
-一人の利用者がDSCC Desktopをインストールし、LM StudioやCodexなどのAIアプリから、保存した研究記録を参照し、道具を使い、許可された計算を依頼できる。複数の利用者が参加した後は、同じ仕組みで研究資産と計算時間を交換できる。モデルが入れ替わっても、データ、実験条件、結果、作成した道具、未解決課題を引き継ぐ。
+一人の利用者がDSCC Desktopをインストールし、LM StudioやCodexなどのAIアプリから、保存した研究記録を参照し、道具を使い、許可された計算を依頼できる。複数の利用者が参加した後は、同じ仕組みで研究資産と計算時間を交換できる。モデルが入れ替わっても、データ、実験条件、結果、作成した道具、未解決課題を引き継ぐ。最終的には、この継承層の上で世界中のクローズAI、オープンAI、人間が同じAI研究projectを共同で進める Distributed AI Research Laboratory を構成する。
 
 原論文の設計原則を継承する。ここで追加するのは、デスクトップ製品のプロセス構成、実装順、具体的なインターフェース、共同開発手順である。自律的な研究サービスやモデル改良を将来載せられる余地は保つ。最初のコードに未検証の自動学習・遠隔実行を混ぜず、接続契約から育てる。
 
@@ -101,3 +101,66 @@ V0は決定的再実行、V1は数値許容差と不変量、V2は確率的再�
 世界規模pre-trainingでは、遠隔GPUを一台の共有VRAMとして扱わない。local island内の高速parallelismと、island間のlow-communication optimizationを分離する。既知の分散学習研究を再利用し、consumer GPUのchurn、heterogeneity、malicious update、dataset provenance、checkpoint forkをDSCC固有の検証対象にする。
 
 Open Model Commonsを導入しても、node ownerの停止権、resource budget、private data境界、実行承認を弱めない。model research agentが新しいcheckpointを提案できても、それだけでrelease権限や追加resource権限を取得しない。
+
+
+## 14. Distributed AI Research Laboratory — 最終アーキテクチャ
+
+DSCCの最終目標は [Distributed AI Research Laboratory](proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md) である。Open Model Commonsはmodel/compute層であり、その上にresearch orchestration層を置く。
+
+```mermaid
+flowchart TB
+  H[Humans] --> RG[Research Gateway]
+  C[Closed AI / API agents] --> RG
+  O[Open / local AI] --> RG
+  RG --> RS[Research State / Artifact Graph]
+  RS --> Lit[Literature & Evidence]
+  RS --> Mem[Computational Memory]
+  RS --> Atlas[Exploration Atlas]
+  RS --> Exp[Experiment Orchestrator]
+  Exp --> Jobs[DSCC Jobs]
+  Jobs --> OMC[Open Model Commons]
+  OMC --> Eval[Evaluation / Verification]
+  Eval --> RS
+  RS --> Models[Model / Agent branches]
+  Models --> RG
+```
+
+### 14.1 参加者を同一modelへ統一しない
+
+closed AIはAPI/tool adapter経由のresearcherとして参加できる。open/local AIはresearcherにも研究対象にもなれる。人間は問題設定、仮説、実験、評価、再現、compute提供を同じArtifact graphへ追加できる。
+
+研究handoffの単位はconversation historyではなくversioned ArtifactとResearch Stateである。異なるproviderやmodelへ交代しても、input CID、既知研究、未解決問題、実験結果、失敗、評価、次の候補を辿れるようにする。
+
+### 14.2 研究loop
+
+research orchestratorは、問いを受けたらまず既知研究を確認し、一次資料からknown resultとunresolved questionを分離する。実験は未解決部分へ割り当てる。
+
+設計では目的に対して最も強くなり得る本命案を先に作り、比較用の簡略版はそこから派生させる。ablationの都合で本命architectureや研究workflowを固定しない。
+
+長期loopは次を永続化する。
+
+- research goals
+- literature state
+- hypotheses
+- experiment queue
+- model / agent branches
+- compute requirements
+- evaluation results
+- failed approaches
+- replication status
+- unresolved conflicts
+- open questions
+
+### 14.3 closed modelの再現性
+
+closed modelのweightや内部状態を要求しない。provider、model identifier、snapshot/versionが取得できる場合はその識別子、tool contract、input Artifact CIDs、output Artifact CIDを記録する。
+
+provider側でmodelが更新された場合、同一runを完全再現できない可能性をResearch Stateに保持する。open/local model runの完全再現性と同一classとして扱わない。
+
+### 14.4 AI研究者自身も研究対象にする
+
+research agentのarchitecture、memory、retrieval、tools、model、training方法もmodel lineageと同様にversion管理できるようにする。
+
+改良されたresearch agentは過去Artifactを継承して次cycleへ参加できる。研究能力の評価には、既知研究の再発明回避、未解決点抽出、experiment validity、failure recovery、cross-agent handoffなどを含める。
+
+T012がresearch contractとcross-model handoffの最初の実装laneを担当する。分散実行はT011およびruntime/P2P/verification層と接続する。
