@@ -107,7 +107,7 @@ DSCCの実質的な問いは、**既存のAI Scientistを、単一model・単一
 
 ---
 
-## 19. Open Model Commonsは最終形ではなく計算・モデル層
+## 3. Open Model Commonsは最終形ではなく計算・モデル層
 
 Distributed Open Model Commonsは、この最終目標を支える重要な中間層である。
 
@@ -148,7 +148,7 @@ Distributed Open Model Commons
 
 ---
 
-## 3. クローズAIも参加できる
+## 4. クローズAIも参加できる
 
 DSCCの研究所は、オープンウェイトモデルだけで構成しない。
 
@@ -192,7 +192,7 @@ provider側でモデルが変更されれば完全再現できない場合もあ
 
 ---
 
-## 4. オープンAIは研究者にも研究対象にもなる
+## 5. オープンAIは研究者にも研究対象にもなる
 
 オープンモデルは二つの役割を持つ。
 
@@ -240,7 +240,7 @@ AIを変更する
 
 ---
 
-## 5. 人間も同じ研究ネットワークへ参加する
+## 6. 人間も同じ研究ネットワークへ参加する
 
 人間は外部observerではなく研究参加者として扱う。
 
@@ -267,7 +267,7 @@ AIを変更する
 
 ---
 
-## 6. 研究はまず既知研究から始める
+## 7. 研究はまず既知研究から始める
 
 研究agentの基本動作は、新しい実験をすぐ始めることではない。
 
@@ -310,7 +310,7 @@ DSCCには検索結果だけでなく、
 
 ---
 
-## 7. 本命設計を先に作る
+## 8. 本命設計を先に作る
 
 AI研究所では、比較実験を作りやすくするために本命設計を弱く固定しない。
 
@@ -345,7 +345,7 @@ benchmarkの都合やablationの都合を、最終architectureの制約にしな
 
 ---
 
-## 8. AIによるAI研究所の役割分担
+## 9. AIによるAI研究所の役割分担
 
 一つの巨大agentに全研究工程を詰め込む必要はない。
 
@@ -383,7 +383,7 @@ Next Research Cycle
 
 ---
 
-## 9. 研究Artifact
+## 10. 研究Artifact
 
 AI研究所では、最終回答だけではなく研究過程を構造化して保存する。
 
@@ -416,7 +416,7 @@ AI研究所では、最終回答だけではなく研究過程を構造化して
 
 ---
 
-## 10. 研究記憶はモデルから独立させる
+## 11. 研究記憶はモデルから独立させる
 
 研究所の継続性を、一つのAIモデルのcontextやproviderへ依存させない。
 
@@ -452,7 +452,7 @@ Computational Memory、Exploration Atlas、Latent Experience Capsuleは、この
 
 ---
 
-## 11. 自律研究ループ
+## 12. 自律研究ループ
 
 最終段階では、AIが研究ループを継続的に回せるようにする。
 
@@ -493,7 +493,7 @@ Computational Memory、Exploration Atlas、Latent Experience Capsuleは、この
 
 ---
 
-## 12. モデル進化と研究進化を分けない
+## 13. モデル進化と研究進化を分けない
 
 通常のmodel developmentでは、研究を行う主体と研究対象が分離している。
 
@@ -530,7 +530,7 @@ v2が新しい研究を行う
 
 ---
 
-## 13. 一つのAIへ収束させない
+## 14. 一つのAIへ収束させない
 
 研究所の目的は、すべての参加者を一つのモデルへ統合することではない。
 
@@ -551,7 +551,7 @@ AI Research Ecosystem
 
 ---
 
-## 14. 研究の評価
+## 15. 研究の評価
 
 AI研究所では、単一benchmark scoreだけを最適化対象にしない。
 
@@ -584,7 +584,7 @@ AI研究所では、単一benchmark scoreだけを最適化対象にしない。
 
 ---
 
-## 15. 研究所で解くべき新しい問題
+## 16. 研究所で解くべき新しい問題
 
 最終形へ進むには、Open Model Commonsの問題に加えて研究orchestration固有の課題がある。
 
@@ -609,7 +609,7 @@ AI研究所では、単一benchmark scoreだけを最適化対象にしない。
 
 ---
 
-## 16. 段階的な到達点
+## 17. 段階的な到達点
 
 ### AIRL-0 — Shared research contract
 
@@ -643,7 +643,7 @@ Open Model Commonsと接続し、研究agentが世界分散computeへexperiment�
 
 ---
 
-## 17. DSCC全体の最終構造
+## 18. DSCC全体の最終構造
 
 ```text
  Humans ───────────────┐
@@ -686,7 +686,7 @@ Models  Training  Inference   Compute
 
 ---
 
-## 18. DSCCの最終的な役割
+## 19. DSCCの最終的な役割
 
 DSCCは、単なるP2P storageでも、分散GPU schedulerでも、LLM memory systemでもない。
 
