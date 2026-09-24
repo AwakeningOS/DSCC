@@ -31,4 +31,8 @@ T012 implements the local research-profile/handoff lane. Actual cross-model rese
 
 The proposal provides six implementation lanes and sixteen local ES challenge IDs mapped to existing tasks/global G-IDs. ES IDs are proposal-local tracking labels, not new completed tasks. Select a scoped lane, coordinate its interfaces in the existing issue, and record real acceptance evidence. The document introduces no collector, cache transfer, model execution or new permission; current task states above remain unchanged.
 
+## Latest literature scout
+
+[2026-09-25 DSCC latest research scout](research/2026-09-25-LATEST_DSCC_PAPERS.ja.md) records sixteen recent primary papers/surveys and turns them into implementation handoffs. It includes AIDE², FML-Bench, KVShareArena, XKV, CacheBridge, Decoupled DiLoCo, P2P cache-aware routing, CacheScout, latent-cache integrity, VeriAttn, OpenPCC, agent protocol/governance studies, research-agent verification surveys and memory × search evaluation. Use the R-ID and lane tables to scope work under the existing T005/T009/T010/T011/T012 issues; do not mark any task complete from literature evidence alone.
+
 Issues: https://github.com/AwakeningOS/DSCC/issues
