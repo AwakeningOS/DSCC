@@ -6,7 +6,7 @@ DSCC can record a research project's questions, evidence, plans, observations, f
 
 ```sh
 python -m dscc --home ~/.dscc init
-python -m dscc --home ~/.dscc research-record --file examples/research_state.json
+python -m dscc --home ~/.dscc research-record --file examples/research/state.json
 # Use the CID returned above:
 python -m dscc --home ~/.dscc research-handoff STATE_CID
 ```
@@ -52,7 +52,7 @@ Repeated-work fingerprints cover exactly the canonical schema/type/project/input
 ## Reproduce the contract tests
 
 ```sh
-python -m pytest -q tests/test_research.py tests/test_research_stdio.py
+python -m pytest -q tests/test_research.py tests/test_research_stdio.py tests/test_research_examples.py
 python -m pytest -q
 python -m dscc demo
 python scripts/check_repository.py

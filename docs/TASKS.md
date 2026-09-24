@@ -15,7 +15,7 @@ Choose one READY task per branch. Check the matching GitHub Issue and coordinate
 | [T009](tasks/T009.md) | Adversarial verification and release audit | READY | — |
 | [T010](tasks/T010.md) | Cross-domain Exploration Atlas | READY for contracts/index | T007 coordination; T001/T002/T004/T005 for later integration |
 | [T011](tasks/T011.md) | Distributed Open Model Commons execution | BLOCKED for public execution; isolated work READY | T001/T003/T005/T006/T009 for full execution |
-| [T012](tasks/T012.md) | Distributed AI Research Laboratory orchestration | READY for contracts/handoff; BLOCKED for full autonomous distributed execution | T007/T010 coordination; T001/T002/T005/T009/T011 for later execution |
+| [T012](tasks/T012.md) | Distributed AI Research Laboratory orchestration | Local contracts/handoff IMPLEMENTED; real-model experiment READY; full autonomous distributed execution BLOCKED | T007/T010 coordination; T001/T002/T005/T009/T011 for later execution |
 
 T001, T002, T003, T005, T007 and T009 can start from M0. Shared schema/core edits require coordination. Start the security reviewer on a different worktree from the implementer.
 
@@ -23,6 +23,6 @@ T010 adds the cross-domain exploration-map proposal and a dedicated implementati
 
 T011 starts from the implemented local OMC contracts, block store and non-executing planner. Public model execution remains blocked on owner/service separation, isolated runtime, peer transport, GPU work and adversarial verification. See [Distributed Open Model Commons](proposals/DISTRIBUTED_OPEN_MODEL_COMMONS.ja.md).
 
-T012 is the first implementation lane toward the final DSCC goal: artifact-based research handoff across closed AI, open AI and humans, followed by multi-agent research orchestration and repeated model-development cycles. See [Distributed AI Research Laboratory](proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md).
+T012 implements the local research-profile/handoff lane. Actual cross-model research-quality experiments, multi-agent orchestration and repeated model-development cycles remain open. See [Research handoff](RESEARCH_HANDOFF.md) and [Distributed AI Research Laboratory](proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md).
 
 Issues: https://github.com/AwakeningOS/DSCC/issues
