@@ -92,6 +92,8 @@ Long-term blockers between the current local foundation and the Distributed AI R
 
 [AIの経験と作業状態を共有するDSCC — Experience and State Sharing](docs/proposals/EXPERIENCE_AND_STATE_SHARING.ja.md) connects model-independent experience graphs, working-state snapshots, latent experience capsules and versioned converters to T010/T012 and Open Model Commons. It records capture/replay contracts, cross-model compatibility, WAN costs, evaluation, sixteen open challenges and six implementation lanes. The [primary-source evidence ledger](docs/proposals/experience-sharing/SOURCES_AND_EVIDENCE.ja.md) distinguishes reported results from DSCC capabilities. **Design material only; no trajectory collector, KV transfer, latent injection or new execution authority is implemented by these documents.**
 
+[Latest research scout — 2026-09-25](docs/research/2026-09-25-LATEST_DSCC_PAPERS.ja.md) maps sixteen recent papers and surveys to T005/T009/T010/T011/T012, with concrete implementation candidates and acceptance evidence for research-agent evaluation, KV/latent transfer, resilient distributed execution, remote-worker verification/privacy, and interoperability/governance. **It is a dated handoff/reference, not evidence that those systems are implemented in DSCC.**
+
 ## Attribution and licensing
 
 Original DSCC concept: Yusuke Maeda. This initial code and new implementation documents are provided under the MIT license in `LICENSE`. Material in `docs/reference/` is retained from the supplied DSCC research packet with separate attribution and provenance; third-party software and future research assets retain their own licenses. The concept-paper DOI identifies the paper, not a software-release DOI.
