@@ -209,7 +209,7 @@ LEC/KV共有を始めると、通常のArtifactより大きく検査しづらい
 ### 実装候補
 
 - cache/latent manifestにblob CID、model CID、cache profile、source context CID、session/run、tensor metadata、converter CID、producer keyを結び付けて署名する。
-- paper固有のHMAC設計をそのまま唯一解にせず、DSCCではEd25519署名による公開検証可能manifestも比較する。
+- 外部研究で扱われる認証付きtransport／MAC系の防御をそのまま唯一解にせず、DSCCではCID + Ed25519署名による公開検証可能manifestも比較する。
 - manifest mismatch、replay、cross-session substitution、converter substitutionをT009の攻撃テストへ追加する。
 
 ### 受入証拠
