@@ -25,4 +25,10 @@ T011 starts from the implemented local OMC contracts, block store and non-execut
 
 T012 implements the local research-profile/handoff lane. Actual cross-model research-quality experiments, multi-agent orchestration and repeated model-development cycles remain open. See [Research handoff](RESEARCH_HANDOFF.md) and [Distributed AI Research Laboratory](proposals/DISTRIBUTED_AI_RESEARCH_LAB.ja.md).
 
+## Experience and state sharing research material
+
+[AIの経験と作業状態を共有するDSCC](proposals/EXPERIENCE_AND_STATE_SHARING.ja.md) connects trajectory intake, experience graphs, working-state snapshots, latent experience capsules and converter registries to T007/T010/T011/T012. Its [primary-source evidence ledger](proposals/experience-sharing/SOURCES_AND_EVIDENCE.ja.md) separates reported research from DSCC implementation and records compatibility, evaluation and cost boundaries.
+
+The proposal provides six implementation lanes and sixteen local ES challenge IDs mapped to existing tasks/global G-IDs. ES IDs are proposal-local tracking labels, not new completed tasks. Select a scoped lane, coordinate its interfaces in the existing issue, and record real acceptance evidence. The document introduces no collector, cache transfer, model execution or new permission; current task states above remain unchanged.
+
 Issues: https://github.com/AwakeningOS/DSCC/issues
