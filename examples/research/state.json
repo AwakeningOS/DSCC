@@ -1,0 +1,24 @@
+{
+  "schema": "dscc.research/0.1",
+  "type": "ResearchState",
+  "project": "dscc-development-example",
+  "title": "Initial DSCC research state",
+  "summary": "Example initial state; no experiment or literature result is claimed.",
+  "contributor": {
+    "kind": "unknown",
+    "name": "Replace with the actual contributor",
+    "provider": null,
+    "model": null,
+    "snapshot": null
+  },
+  "input_cids": [],
+  "sources": [],
+  "relations": [],
+  "content": {
+    "objective": "Continue DSCC development from source-linked research records.",
+    "finding_cids": [],
+    "open_question_cids": [],
+    "next_actions": ["Record the relevant original sources, known results and an unresolved question."],
+    "resume_cids": []
+  }
+}

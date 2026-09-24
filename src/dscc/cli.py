@@ -11,6 +11,7 @@ from .canonical import MAX_BUNDLE_BYTES, MAX_OBJECT_BYTES, canonical_bytes, pars
 from .demo import run_demo
 from .mcp_server import MCPServer
 from .omc_service import OpenModelCommons
+from .research import ResearchService
 from .store import Node, _bounded_file, init_node
 
 
@@ -60,10 +61,13 @@ def parser() -> argparse.ArgumentParser:
     b = s.add_parser("block-verify")
     b.add_argument("cid")
 
-    for name in ("model-record", "capability-record", "training-record"):
+    for name in ("model-record", "capability-record", "training-record", "research-record"):
         x = s.add_parser(name)
         x.add_argument("--file", type=Path, required=True)
         x.add_argument("--license", default="NOASSERTION")
+
+    x = s.add_parser("research-handoff", help="Read an explicit research state and its verified ancestors")
+    x.add_argument("state_cid")
 
     x = s.add_parser("model-inspect")
     x.add_argument("cid")
@@ -116,12 +120,16 @@ def main(argv: list[str] | None = None) -> int:
                 result = omc.verify_block(a.cid)
             elif a.command == "model-record":
                 result = omc.record_model(_profile(a.file), license=a.license)
-            elif a.command == "model-inspect":
-                result = omc.inspect_model(a.cid)
             elif a.command == "capability-record":
                 result = omc.record_capability(_profile(a.file), license=a.license)
             elif a.command == "training-record":
                 result = omc.record_training_run(_profile(a.file), license=a.license)
+            elif a.command == "research-record":
+                result = ResearchService(node).record(_profile(a.file), license=a.license)
+            elif a.command == "research-handoff":
+                result = ResearchService(node).handoff(a.state_cid)
+            elif a.command == "model-inspect":
+                result = omc.inspect_model(a.cid)
             elif a.command == "plan-inference":
                 result = omc.plan_inference(
                     a.model_cid, a.capability_cid, precision=a.precision
