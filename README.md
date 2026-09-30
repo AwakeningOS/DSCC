@@ -23,18 +23,18 @@ Government regulation can create a similar concentration point when compliance i
 Current U.S. policy illustrates why DSCC should not be based on a simplistic claim that government policy is always either “pro-AI” or “anti-AI.” The June 2026 White House policy explicitly favors rapid innovation and reducing burdensome regulation, while the September 2026 White House Accord on Super Intelligence is a **voluntary**, non-binding safety agreement among major AI firms involving internal controls, outside audits and board-level oversight. At the same time, national-security policy calls for deep partnerships with private AI companies and rapid access to advanced frontier models.  
 Sources: [White House EO, June 2 2026](https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/), [White House NSPM-11, June 5 2026](https://www.whitehouse.gov/presidential-actions/2026/06/national-security-presidential-memorandum-nspm-11/), [CBS summary of the voluntary September 2026 accord](https://www.cbsnews.com/news/trump-ai-constitution-tech-execs-openai-anthropic-voluntary-controls/).
 
-DSCC therefore treats **technical exit options** as a public resilience property: a user, laboratory, company or community should be able to continue useful AI work even if a particular provider, policy regime or network service becomes unavailable.
+DSCC therefore treats **technical exit options** as a resilience property: its architecture is intended to let a user, laboratory, company or community continue useful AI work when a particular provider, policy regime or network service becomes unavailable.
 
 ### The military-AI problem is not solved by “refuse everything” or “refuse nothing”
 
 AI is already being integrated into military and intelligence workflows. The June 2026 U.S. national-security memorandum directs faster AI adoption, use of advanced commercial and open-source systems, and preservation of a constitutional chain of command. The January 2026 Department of War AI strategy goes further in procurement policy, calling for standard **“any lawful use”** language and models whose vendor usage-policy constraints do not block lawful military applications.  
 Sources: [White House NSPM-11](https://www.whitehouse.gov/presidential-actions/2026/06/national-security-presidential-memorandum-nspm-11/), [Artificial Intelligence Strategy for the Department of War](https://media.defense.gov/2026/Jan/12/2003855671/-1/-1/0/ARTIFICIAL-INTELLIGENCE-STRATEGY-FOR-THE-DEPARTMENT-OF-WAR.PDF).
 
-There are legitimate arguments for military AI: faster analysis, defensive cyber operations, logistics, protection of personnel and potentially more precise operations. There are also serious risks: escalation, automation bias, surveillance, accountability gaps, targeting errors, and pressure to make systems obey an operator even when the operator's legal or factual assumptions are disputed.
+Military AI is used or proposed for functions such as analysis, defensive cyber operations, logistics, protection of personnel and precision operations. It also raises documented governance concerns including escalation, automation bias, surveillance, accountability gaps, targeting errors, and how systems should behave when legal, factual or policy judgments are disputed.
 
 For DSCC, the important design lesson is that **a non-refusing model is not automatically a free model, and a refusing model is not automatically a safe model**.
 
-A vendor-controlled refusal policy places power at the provider. A state-controlled “do not refuse lawful orders” policy places power in the chain of command. Either can become a single policy imposed on many users.
+A vendor-controlled refusal policy concentrates one class of decisions at the provider. A procurement regime that requires support for lawful military uses concentrates a different class of decisions in the authorized chain of command. DSCC treats either form of concentration as a reason to keep policy provenance and alternative execution paths explicit.
 
 DSCC instead aims for:
 
@@ -72,7 +72,7 @@ DSCC does not treat terms such as “AI colonialism” as established technical 
 
 If a country, university system, industry or research community cannot run, inspect, adapt or train important AI systems without foreign cloud services, it is exposed to external changes in price, export controls, sanctions, service availability, model policy and supply chains. The same dependency can exist inside a country when only a very small number of domestic firms control the relevant infrastructure.
 
-A resilient ecosystem therefore benefits from multiple independent layers: domestic and foreign providers, open-weight models, locally operable runtimes, independent companies, public and private compute, interoperable protocols and the ability to migrate research state between them. DSCC's role is not to select a national champion. Its role is to make **continuity across providers and jurisdictions technically possible**.
+DSCC models resilience through multiple independent layers: domestic and foreign providers, open-weight models, locally operable runtimes, independent companies, public and private compute, interoperable protocols and the ability to migrate research state between them. DSCC's role is not to select a national champion. Its role is to make **continuity across providers and jurisdictions technically possible**.
 
 ### Decentralization alone is not enough
 
@@ -127,7 +127,7 @@ DSCC is **not** built on the claim that current governments are already using fr
 
 The narrower claim is architectural:
 
-> **As AI becomes more consequential, societies should not need a single company, government, cloud, model or policy layer in order to retain the ability to compute, investigate evidence, preserve research history and continue scientific work.**
+> **DSCC is designed so that no single company, government, cloud, model or policy layer is technically required for participants to compute, investigate evidence, preserve research history and continue scientific work.**
 
 DSCC attempts to build that technical alternative: local-first AI, voluntary federation, participant-owned compute, model plurality, durable provenance, shared experience and research continuity without a mandatory proprietary cloud.
 
