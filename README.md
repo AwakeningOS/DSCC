@@ -25,28 +25,47 @@ Sources: [White House EO, June 2 2026](https://www.whitehouse.gov/presidential-a
 
 DSCC therefore treats **technical exit options** as a resilience property: its architecture is intended to let a user, laboratory, company or community continue useful AI work when a particular provider, policy regime or network service becomes unavailable.
 
-### The military-AI problem is not solved by “refuse everything” or “refuse nothing”
+### War, coercive power, and AI that is required not to refuse
 
-AI is already being integrated into military and intelligence workflows. The June 2026 U.S. national-security memorandum directs faster AI adoption, use of advanced commercial and open-source systems, and preservation of a constitutional chain of command. The January 2026 Department of War AI strategy goes further in procurement policy, calling for standard **“any lawful use”** language and models whose vendor usage-policy constraints do not block lawful military applications.  
-Sources: [White House NSPM-11](https://www.whitehouse.gov/presidential-actions/2026/06/national-security-presidential-memorandum-nspm-11/), [Artificial Intelligence Strategy for the Department of War](https://media.defense.gov/2026/Jan/12/2003855671/-1/-1/0/ARTIFICIAL-INTELLIGENCE-STRATEGY-FOR-THE-DEPARTMENT-OF-WAR.PDF).
+AI is already being integrated into military and intelligence systems, and current U.S. policy makes the refusal question explicit. The January 2026 Department of War AI strategy calls for standard **“any lawful use”** terms and for models whose vendor usage policies do not block lawful military applications. In a public address announcing that strategy, the Secretary of War stated that the Department would not employ models that prevent warfighting use. The June 2026 White House NSPM-11 similarly directs agencies to ensure, through contracts or other means, that no commercial entity can prevent, disable, degrade, or materially modify an AI system on which federal missions depend.  
+Sources: [Department of War AI strategy announcement](https://www.war.gov/News/Releases/Release/article/4376420/war-department-launches-ai-acceleration-strategy-to-secure-american-military-ai/), [Secretary of War remarks at SpaceX](https://www.war.gov/News/Transcripts/Transcript/Article/4377190/remarks-by-secretary-of-war-pete-hegseth-at-spacex/), [White House NSPM-11](https://www.whitehouse.gov/presidential-actions/2026/06/national-security-presidential-memorandum-nspm-11/).
 
-Military AI is used or proposed for functions such as analysis, defensive cyber operations, logistics, protection of personnel and precision operations. It also raises documented governance concerns including escalation, automation bias, surveillance, accountability gaps, targeting errors, and how systems should behave when legal, factual or policy judgments are disputed.
+For DSCC, this exposes a deeper problem than ordinary API moderation. When AI becomes part of warfighting, intelligence, surveillance, cyber operations or other coercive state functions, **the ability of the system to refuse, stop, disagree, or demand another layer of review becomes a question of who ultimately controls the model**.
 
-For DSCC, the important design lesson is that **a non-refusing model is not automatically a free model, and a refusing model is not automatically a safe model**.
+A closed provider can centrally impose a refusal policy on millions of users. A government procurement regime can move the control point in the opposite direction by requiring that vendor policy must not block authorized missions. Both architectures concentrate the final policy decision in a small number of institutions.
 
-A vendor-controlled refusal policy concentrates one class of decisions at the provider. A procurement regime that requires support for lawful military uses concentrates a different class of decisions in the authorized chain of command. DSCC treats either form of concentration as a reason to keep policy provenance and alternative execution paths explicit.
+The DSCC concern is not that every refusal is correct or that every authorized military use is incorrect. The concern is **mandatory dependence on a single authority's answer**.
 
-DSCC instead aims for:
+This becomes especially consequential in high-stakes systems because errors and disputed judgments can concern targeting, intelligence assessments, surveillance, cyber operations, escalation, civilian harm, or the legality and interpretation of an order. A requirement that a model remain available for authorized missions may improve continuity from the operator's perspective, while at the same time removing a provider-level source of friction or independent refusal. A provider-level refusal system creates the inverse dependency: the provider, rather than the local operator or institution, becomes the policy gate.
 
-- explicit, inspectable policy profiles rather than hidden universal rules;
-- owner-controlled local execution boundaries;
-- multiple models and providers rather than one mandatory model;
-- provenance showing which policy, model and operator produced a result;
-- auditability and independent verification for high-stakes claims;
-- the ability to preserve disagreement rather than silently deleting dissenting evidence;
-- no assumption that a cryptographic signature, government authorization or corporate policy proves scientific or moral correctness.
+DSCC therefore treats refusal behavior itself as provenance-bearing policy state rather than as an invisible universal rule.
 
-This does **not** mean removing safety boundaries. It means keeping safety, authority and scientific truth as separate layers that can be examined rather than collapsing them into one central service policy.
+- which model and model revision was used;
+- which policy profile governed it;
+- who selected that policy;
+- what authority approved the execution;
+- what evidence and uncertainty accompanied the result;
+- whether another independent model or reviewer disagreed;
+- whether the operator could choose an alternative model without losing the underlying research state or data.
+
+The objective is **plurality and inspectability**, not a universal “never refuse” model and not a universal centrally imposed refusal model.
+
+A non-refusing AI can become a highly effective instrument of centralized coercive power. A centrally refusing AI can make a private provider the gatekeeper of what users, institutions or researchers are allowed to ask or compute. DSCC is designed so that neither a company nor a state automatically becomes the sole policy authority for the whole network.
+
+That means keeping several things separate:
+
+```text
+legal authorization
+    ≠ factual correctness
+    ≠ scientific validity
+    ≠ moral legitimacy
+    ≠ execution permission on another person's machine
+    ≠ a requirement that every other model must follow the same policy
+```
+
+DSCC does not remove safety controls or legal obligations. It makes them explicit and localizable: owners retain control of their machines; projects can choose inspectable policies; different models can coexist; high-stakes results can require independent review; contradictory evidence remains visible; and no single hidden provider policy is required for research continuity.
+
+This is also why military and intelligence use strengthens, rather than weakens, the case for decentralized and locally operable AI. If AI becomes infrastructure for state power, then civil society, independent researchers, companies, universities and other states retain more technical autonomy when they can operate alternative models, inspect their behavior, preserve evidence and continue computation without depending on the same small set of centralized services.
 
 ### Why local and offline-capable AI matters
 
