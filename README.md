@@ -94,6 +94,8 @@ Long-term blockers between the current local foundation and the Distributed AI R
 
 [Latest research scout — 2026-09-25](docs/research/2026-09-25-LATEST_DSCC_PAPERS.ja.md) maps sixteen recent papers and surveys to T005/T009/T010/T011/T012, with concrete implementation candidates and acceptance evidence for research-agent evaluation, KV/latent transfer, resilient distributed execution, remote-worker verification/privacy, and interoperability/governance. **It is a dated handoff/reference, not evidence that those systems are implemented in DSCC.**
 
+[Enabling technologies scout — 2026-10-01](docs/research/2026-10-01-ENABLING_TECHNOLOGIES.ja.md) tracks implementation-ready protocols, runtimes and hardware standards that can reduce how much DSCC must invent itself: WiCi, NVIDIA Dynamo/NIXL, vLLM KV transfer, OpenSharing, DNS-AID, exo, UALink, Ultra Ethernet and CXL. It maps them to adapter and compute-island implementation lanes with acceptance boundaries. **Reference/design material only; no external runtime or hardware capability is implemented by this document.**
+
 ## Attribution and licensing
 
 Original DSCC concept: Yusuke Maeda. This initial code and new implementation documents are provided under the MIT license in `LICENSE`. Material in `docs/reference/` is retained from the supplied DSCC research packet with separate attribution and provenance; third-party software and future research assets retain their own licenses. The concept-paper DOI identifies the paper, not a software-release DOI.
