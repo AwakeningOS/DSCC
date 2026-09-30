@@ -4,6 +4,134 @@
 
 DSCC Desktop is the application project for **Distributed Scientific Cognition Commons**, proposed by **Yusuke Maeda**. Its final goal is a **Distributed AI Research Laboratory**: a world-scale research commons where closed AI systems, open models, local agents and humans can continue the same AI-research projects through shared artifacts, experiments, evaluations and compute. Open Model Commons is the model/compute layer beneath that goal, while DSCC's persistent provenance layer lets research survive changes of model, provider, machine and participant.
 
+
+## Why DSCC exists: preserving independent AI capacity
+
+DSCC is not only a distributed-computing project and not only a memory system for agents. Its deeper purpose is to preserve **independent access to AI capability** as AI becomes critical infrastructure for research, software, industry, public services and national security.
+
+The project starts from a structural observation: if advanced AI can only be used through a small number of centrally operated services, then model availability, permitted uses, refusal behavior, pricing, data handling and continuity can all change at the same control points. That does **not** mean every restriction is censorship, every government intervention is illegitimate, or every company policy is harmful. It means concentration creates a common failure mode: one policy or outage can affect a very large fraction of users at once.
+
+The 2026 Stanford AI Index reports that industry produced more than 90% of notable frontier models in 2025 and describes the frontier as increasingly concentrated among a small number of organizations; it also notes that the most capable systems are among the least transparent. The same report identifies **AI sovereignty** — greater domestic agency over AI capabilities — as an emerging policy objective while noting that compute infrastructure remains unevenly distributed.  
+Sources: [Stanford AI Index 2026 — Research & Development](https://hai.stanford.edu/assets/files/ai_index_report_2026_chapter_1_research_development.pdf), [Policy and Governance](https://hai.stanford.edu/ai-index/2026-ai-index-report/policy-and-governance).
+
+### Centralized safety policy is still centralized power
+
+Closed AI services necessarily make policy choices. A provider may refuse categories of requests, change a model, remove a capability, change retention rules, alter a system prompt, restrict access by region, or discontinue a service. Some of those choices may be justified by safety, law, privacy or commercial constraints. The architectural issue is that users normally cannot independently reproduce, audit or replace the policy stack behind a closed service.
+
+Government regulation can create a similar concentration point when compliance is practical only for a handful of frontier providers, or when public institutions depend on a small set of private models. Conversely, weak regulation can also increase dependence if a few companies become de facto infrastructure without interoperable alternatives.
+
+Current U.S. policy illustrates why DSCC should not be based on a simplistic claim that government policy is always either “pro-AI” or “anti-AI.” The June 2026 White House policy explicitly favors rapid innovation and reducing burdensome regulation, while the September 2026 White House Accord on Super Intelligence is a **voluntary**, non-binding safety agreement among major AI firms involving internal controls, outside audits and board-level oversight. At the same time, national-security policy calls for deep partnerships with private AI companies and rapid access to advanced frontier models.  
+Sources: [White House EO, June 2 2026](https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/), [White House NSPM-11, June 5 2026](https://www.whitehouse.gov/presidential-actions/2026/06/national-security-presidential-memorandum-nspm-11/), [CBS summary of the voluntary September 2026 accord](https://www.cbsnews.com/news/trump-ai-constitution-tech-execs-openai-anthropic-voluntary-controls/).
+
+DSCC therefore treats **technical exit options** as a public resilience property: a user, laboratory, company or community should be able to continue useful AI work even if a particular provider, policy regime or network service becomes unavailable.
+
+### The military-AI problem is not solved by “refuse everything” or “refuse nothing”
+
+AI is already being integrated into military and intelligence workflows. The June 2026 U.S. national-security memorandum directs faster AI adoption, use of advanced commercial and open-source systems, and preservation of a constitutional chain of command. The January 2026 Department of War AI strategy goes further in procurement policy, calling for standard **“any lawful use”** language and models whose vendor usage-policy constraints do not block lawful military applications.  
+Sources: [White House NSPM-11](https://www.whitehouse.gov/presidential-actions/2026/06/national-security-presidential-memorandum-nspm-11/), [Artificial Intelligence Strategy for the Department of War](https://media.defense.gov/2026/Jan/12/2003855671/-1/-1/0/ARTIFICIAL-INTELLIGENCE-STRATEGY-FOR-THE-DEPARTMENT-OF-WAR.PDF).
+
+There are legitimate arguments for military AI: faster analysis, defensive cyber operations, logistics, protection of personnel and potentially more precise operations. There are also serious risks: escalation, automation bias, surveillance, accountability gaps, targeting errors, and pressure to make systems obey an operator even when the operator's legal or factual assumptions are disputed.
+
+For DSCC, the important design lesson is that **a non-refusing model is not automatically a free model, and a refusing model is not automatically a safe model**.
+
+A vendor-controlled refusal policy places power at the provider. A state-controlled “do not refuse lawful orders” policy places power in the chain of command. Either can become a single policy imposed on many users.
+
+DSCC instead aims for:
+
+- explicit, inspectable policy profiles rather than hidden universal rules;
+- owner-controlled local execution boundaries;
+- multiple models and providers rather than one mandatory model;
+- provenance showing which policy, model and operator produced a result;
+- auditability and independent verification for high-stakes claims;
+- the ability to preserve disagreement rather than silently deleting dissenting evidence;
+- no assumption that a cryptographic signature, government authorization or corporate policy proves scientific or moral correctness.
+
+This does **not** mean removing safety boundaries. It means keeping safety, authority and scientific truth as separate layers that can be examined rather than collapsing them into one central service policy.
+
+### Why local and offline-capable AI matters
+
+If a useful model can run only after contacting a remote service, the user remains dependent on that service for availability and permission. DSCC therefore treats **local-first and offline-capable AI** as a long-term requirement, especially for open-weight models.
+
+The target is not that every person must own a frontier-scale GPU cluster. The target is that useful capability can exist at several levels:
+
+```text
+individual machine
+      ↓
+home / laboratory / office compute island
+      ↓
+voluntary trusted peers
+      ↓
+wider DSCC network
+```
+
+A node should be able to keep working locally when disconnected. Network participation should add models, compute, evidence and collaborators rather than being a prerequisite for the AI to exist at all.
+
+### National AI sovereignty means retaining an independent capability floor
+
+DSCC does not treat terms such as “AI colonialism” as established technical facts. The concrete engineering concern is **strategic dependency**.
+
+If a country, university system, industry or research community cannot run, inspect, adapt or train important AI systems without foreign cloud services, it is exposed to external changes in price, export controls, sanctions, service availability, model policy and supply chains. The same dependency can exist inside a country when only a very small number of domestic firms control the relevant infrastructure.
+
+A resilient ecosystem therefore benefits from multiple independent layers: domestic and foreign providers, open-weight models, locally operable runtimes, independent companies, public and private compute, interoperable protocols and the ability to migrate research state between them. DSCC's role is not to select a national champion. Its role is to make **continuity across providers and jurisdictions technically possible**.
+
+### Decentralization alone is not enough
+
+A decentralized system can also fail badly. It can spread malware, fabricated evidence, poisoned models, abusive workloads, Sybil identities and unverifiable results. DSCC is therefore not based on the equation:
+
+```text
+decentralized = trustworthy
+```
+
+Instead:
+
+```text
+decentralized
++ provenance
++ explicit permissions
++ sandboxing
++ verification
++ source recovery
++ contradiction preservation
++ owner control
+= a system that can remain open without treating every peer as trusted
+```
+
+This is why DSCC keeps identity, computation verification, scientific evidence, execution permission and publication permission as different states.
+
+### From independent local AI to a distributed research civilization
+
+Local models alone are not enough either. If a million independent agents repeatedly rediscover the same facts and repeat the same failed experiments, decentralization loses much of the advantage of central scale.
+
+DSCC therefore combines **independence** with **shared scientific experience**:
+
+```text
+independent models and machines
+        ↓
+signed artifacts and primary evidence
+        ↓
+research state and unresolved questions
+        ↓
+experience graphs including failures and branches
+        ↓
+shared compute and model infrastructure
+        ↓
+new experiments, replications and improved agents
+        ↺
+```
+
+The long-term objective is a distributed AI research laboratory in which no single company, government, model family or machine is required for the research process to continue.
+
+### What DSCC is and is not asserting
+
+DSCC is **not** built on the claim that current governments are already using frontier AI regulation as a unified censorship system. The September 2026 U.S. accord, for example, is currently voluntary and lacks direct government enforcement. Nor does DSCC assume that closed models are inherently malicious or that military AI has no legitimate uses.
+
+The narrower claim is architectural:
+
+> **As AI becomes more consequential, societies should not need a single company, government, cloud, model or policy layer in order to retain the ability to compute, investigate evidence, preserve research history and continue scientific work.**
+
+DSCC attempts to build that technical alternative: local-first AI, voluntary federation, participant-owned compute, model plurality, durable provenance, shared experience and research continuity without a mandatory proprietary cloud.
+
+
 [Concept paper — DOI: 10.5281/zenodo.22782576](https://doi.org/10.5281/zenodo.22782576) · [日本語ガイド](docs/START_HERE.ja.md) · [Architecture](docs/ARCHITECTURE.ja.md) · [Development status](docs/STATUS.md) · [Agent instructions](AGENTS.md) · [Development issues](https://github.com/AwakeningOS/DSCC/issues)
 
 ## What this repository contains
