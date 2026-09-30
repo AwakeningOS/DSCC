@@ -35,4 +35,6 @@ The proposal provides six implementation lanes and sixteen local ES challenge ID
 
 [2026-09-25 DSCC latest research scout](research/2026-09-25-LATEST_DSCC_PAPERS.ja.md) records sixteen recent primary papers/surveys and turns them into implementation handoffs. It includes AIDE², FML-Bench, KVShareArena, XKV, CacheBridge, Decoupled DiLoCo, P2P cache-aware routing, CacheScout, latent-cache integrity, VeriAttn, OpenPCC, agent protocol/governance studies, research-agent verification surveys and memory × search evaluation. Use the R-ID and lane tables to scope work under the existing T005/T009/T010/T011/T012 issues; do not mark any task complete from literature evidence alone.
 
+[2026-10-01 enabling technologies scout](research/2026-10-01-ENABLING_TECHNOLOGIES.ja.md) tracks concrete external implementations and standards that can be used instead of rebuilding lower layers: DNS-AID discovery, OpenSharing assets, vLLM/NIXL KV data movement, WiCi/exo/Dynamo compute patterns, and UALink/Ultra Ethernet/CXL hardware fabrics. It defines adapter lanes N1–N5 and keeps all existing task status unchanged.
+
 Issues: https://github.com/AwakeningOS/DSCC/issues
