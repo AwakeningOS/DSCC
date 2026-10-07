@@ -160,7 +160,175 @@ Can it work with:
 
 That distinction is important: DSCC should not spend research effort re-proving the part INTELLECT-1 has already demonstrated.
 
-## 2. Decentralized GPU Mesh Training
+## 2. Deployment Strategy: Start with a Trusted Volunteer Compute Cooperative
+
+A practical DSCC path does not require solving the hardest permissionless-adversarial problem before distributed training can begin.
+
+There is a useful intermediate regime:
+
+```
+participants share a common goal
+        +
+participants voluntarily contribute compute
+        +
+nodes are mostly honest
+        +
+nodes are still unreliable, heterogeneous and temporary
+```
+
+This should be treated as a first-class deployment target rather than as a temporary shortcut.
+
+A plausible early constituency is the local/open-model community: people who want independent, locally operable AI capability and may therefore be willing to contribute idle GPUs to a shared training effort. Concern about future restrictions can strengthen that coordination incentive, but DSCC should not assume that any particular regulation is inevitable. The engineering point is broader: **shared interest can substitute for a fully open anonymous market during the first deployment stage.**
+
+### Threat model for the first stage
+
+The first training network can reasonably target **honest-but-unreliable** participants:
+
+- nodes may disconnect without notice;
+- bandwidth may fluctuate;
+- GPUs may differ greatly in speed and VRAM;
+- nodes may return after long absences;
+- a participant may reclaim their machine at any time;
+- a node may fail accidentally;
+- participants are not assumed to be actively poisoning updates.
+
+This changes the initial priority order.
+
+For the first practical system, DSCC should prioritize:
+
+1. **churn tolerance**;
+2. **heterogeneous GPU scheduling**;
+3. **checkpoint/state replication**;
+4. **fast rejoin and catch-up**;
+5. **bandwidth-adaptive synchronization**;
+6. **training continuity as world size changes**.
+
+Byzantine robustness and Sybil resistance remain essential for later open participation, but they should not block the trusted-volunteer milestone.
+
+### What "full churn tolerance" should mean
+
+No distributed system can continue if every copy of the current state disappears simultaneously.
+
+Therefore the useful target is not literally "survive loss of every node." It is:
+
+> **Any individual worker, and any ordinary subset of workers, may leave without terminating the training run, provided enough replicated state and compute remain available.**
+
+A minimal design target is:
+
+```
+worker A ─ training
+worker B ─ training
+worker C ─ training
+worker D ─ checkpoint/state replica
+
+        ↓ worker B leaves
+
+worker A ─ training
+worker C ─ training
+worker D ─ promoted / catches up
+```
+
+Current checkpoints and essential optimizer/training state should exist on multiple independent participants and, when appropriate, durable storage.
+
+A worker that returns later should be able to:
+
+```
+discover current run
+      ↓
+fetch authenticated current state
+      ↓
+validate ancestry / training-run provenance
+      ↓
+catch up
+      ↓
+rejoin without restarting the run
+```
+
+### Staged trust model
+
+DSCC should separate three deployment stages.
+
+#### Stage 1 — Trusted Compute Cooperative
+
+Participants are invited, registered, or otherwise known to the project.
+
+Primary problems:
+
+- churn;
+- heterogeneous hardware;
+- bandwidth asymmetry;
+- checkpoint replication;
+- dynamic membership;
+- contribution measurement.
+
+This stage is the closest extension of INTELLECT-1 toward participant-owned local GPUs.
+
+#### Stage 2 — Open Cooperative
+
+New participants may join, but identity, reputation and quarantine mechanisms exist.
+
+Additional problems:
+
+- suspicious-update detection;
+- contribution verification;
+- reputation;
+- update isolation;
+- rollback / exclusion;
+- stronger provenance.
+
+#### Stage 3 — Permissionless DSCC
+
+Anyone may attempt to participate.
+
+Additional problems become mandatory:
+
+- Byzantine-resilient aggregation;
+- Sybil resistance;
+- proof or verification of useful compute;
+- poisoning resistance;
+- adversarial topology testing;
+- decentralized coordination without a single trusted operator.
+
+This staged model avoids a research trap:
+
+```
+permissionless Byzantine problem unsolved
+        ↓
+therefore no distributed training deployment
+```
+
+Instead:
+
+```
+trusted volunteer federation
+        ↓
+working heterogeneous global training
+        ↓
+open cooperative
+        ↓
+permissionless adversarially robust network
+```
+
+### Recruitment is part of the systems design
+
+For DSCC, compute acquisition need not begin as a purely anonymous marketplace.
+
+A shared objective can itself recruit compute:
+
+```
+people want independent local/open AI capability
+        ↓
+participants contribute idle GPUs
+        ↓
+the network trains a shared model
+        ↓
+contributors receive access, attribution, reputation,
+or other project-defined benefits
+```
+
+This is technically important because it allows the first distributed-training network to optimize around cooperation rather than immediately paying the full complexity cost of anonymous adversarial participation.
+
+## 3. Decentralized GPU Mesh Training
 
 ### Core idea
 
@@ -193,7 +361,7 @@ Candidate node metadata:
 }
 ```
 
-## 3. Adaptive Synchronization Training
+## 4. Adaptive Synchronization Training
 
 Fixed synchronization intervals are inefficient when worker quality and network conditions change.
 
@@ -213,7 +381,7 @@ Possible extension:
 
 INTELLECT-1 demonstrates that sparse outer synchronization is practical at global scale; adaptive-synchronization work suggests that DSCC should go further and make the interval itself responsive to training and network state.
 
-## 4. Elastic Compute Sharing
+## 5. Elastic Compute Sharing
 
 Distributed compute should be modeled as time-dependent availability.
 
@@ -241,7 +409,7 @@ Suggested metadata:
 
 INTELLECT-1's dynamic join/leave support provides a concrete precedent for treating membership changes as a routine training event. DSCC extends that requirement to finer-grained participant-owned compute whose availability may change much more frequently.
 
-## 5. Evidence Lineage and Epistemic Sybil Resistance
+## 6. Evidence Lineage and Epistemic Sybil Resistance
 
 DSCC shares research artifacts and agent experiences. Identity count alone is not enough to measure independent evidence.
 
@@ -281,7 +449,7 @@ training update
 
 A model update should not become trusted merely because many identities repeat or relay it.
 
-## 6. Byzantine Placement Testing
+## 7. Byzantine Placement Testing
 
 Security testing should not only measure malicious node percentage.
 
@@ -302,33 +470,44 @@ This becomes especially important when extending INTELLECT-1-style dynamic globa
 
 ## Recommended implementation priority
 
-### Phase 1 — establish the training/provenance substrate
+### Phase 1 — trusted volunteer training substrate
+
+Goal: make a cooperative network of participant-owned GPUs able to keep one training run alive despite ordinary churn.
 
 - artifact evidence lineage
 - node capability metadata
 - explicit training-run and update provenance
-- adaptive synchronization parameters
-
-### Phase 2 — dynamic participant-owned compute
-
-- elastic compute scheduler
 - P2P checkpoint/state transfer
+- replicated current-state availability
 - dynamic membership and failure recovery
 - heterogeneous-node placement
+- adaptive synchronization parameters
+- elastic compute scheduler
+- rejoin / catch-up protocol
 
-### Phase 3 — adversarially robust global training
+### Phase 2 — heterogeneous decentralized model execution
+
+- decentralized GPU mesh training protocol
+- pipeline/model partitioning across heterogeneous devices
+- low-bandwidth activation transfer and correction mechanisms
+- consumer-GPU-aware placement and memory planning
+
+### Phase 3 — open cooperative hardening
+
+- suspicious-update detection
+- quarantine and rollback
+- contribution verification
+- identity / reputation integration
+- stronger update provenance
+
+### Phase 4 — permissionless adversarial robustness
 
 - Byzantine placement simulator
 - malicious-update detection / robust aggregation
 - Sybil-resistant contribution accounting
 - verifiable useful-compute mechanisms
+- poisoning resistance
 - removal or replication of mandatory central coordination services
-
-### Phase 4 — heterogeneous decentralized model execution
-
-- decentralized GPU mesh training protocol
-- pipeline/model partitioning across heterogeneous devices
-- low-bandwidth activation transfer and correction mechanisms
 
 ## Architectural direction
 
