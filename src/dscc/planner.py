@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ._placement import pack_weight_blocks
 from .canonical import canonical_bytes, cid_for
 from .omc import validate_capability, validate_model
 
@@ -74,26 +75,13 @@ def plan_inference(model: dict[str, Any],
     else:
         if sum(d["usable_memory_bytes"] for d in devices) < required:
             raise ValueError("compatible advertised GPU memory is insufficient")
-        remaining = {
+        capacities = {
             (d["capability_cid"], d["device_id"]): d["usable_memory_bytes"] for d in devices
         }
-        placements = {
-            (d["capability_cid"], d["device_id"]): [] for d in devices
-        }
-        assigned = {
-            (d["capability_cid"], d["device_id"]): 0 for d in devices
-        }
-        for weight in sorted(model["weights"], key=lambda w: (-w["bytes"], w["cid"])):
-            choices = [
-                (capacity, key) for key, capacity in remaining.items()
-                if capacity >= weight["bytes"]
-            ]
-            if not choices:
-                raise ValueError("a model shard does not fit any compatible GPU; split weights more finely")
-            _, key = max(choices, key=lambda row: (row[0], row[1]))
-            placements[key].append(weight["cid"])
-            assigned[key] += weight["bytes"]
-            remaining[key] -= weight["bytes"]
+        weights = [(w["cid"], w["bytes"]) for w in model["weights"]]
+        placements = pack_weight_blocks(weights, capacities)
+        sizes = dict(weights)
+        assigned = {key: sum(sizes[cid] for cid in cids) for key, cids in placements.items()}
         used = [key for key, rows in placements.items() if rows]
         if len(used) < 2:
             raise ValueError("pipeline planning expected multiple devices")
