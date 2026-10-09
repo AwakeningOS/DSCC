@@ -37,4 +37,10 @@ The proposal provides six implementation lanes and sixteen local ES challenge ID
 
 [2026-10-01 enabling technologies scout](research/2026-10-01-ENABLING_TECHNOLOGIES.ja.md) tracks concrete external implementations and standards that can be used instead of rebuilding lower layers: DNS-AID discovery, OpenSharing assets, vLLM/NIXL KV data movement, WiCi/exo/Dynamo compute patterns, and UALink/Ultra Ethernet/CXL hardware fabrics. It defines adapter lanes N1–N5 and keeps all existing task status unchanged.
 
+## 2026-10-09 review and handoff
+
+The [research index](research/README.md) links the [latest seven-paper update](research/2026-10-09-RESEARCH_UPDATE.ja.md) and the [trusted-volunteer federation roadmap](research/DSCC_2026_Distributed_AI_Architecture.md). The update separates primary abstracts, author project descriptions, inspected source code and experiments not yet reproduced. Follow its task mappings for cooperative training, action/observation intake, experience-use evaluation, harness candidate selection and reusable KV compression.
+
+T011's [capacity-only planner correction](PLANNER.md) is implemented in PR #24. It preserves successful legacy plans and distinguishes unknown search outcomes from proven infeasibility. It does not complete T011 or introduce GPU/network execution. For the first cooperative training milestone, churn, heterogeneous workloads, authenticated state recovery and owner-controlled participation can be developed before permissionless Byzantine/Sybil defenses; the required local execution and authorization boundaries remain in force.
+
 Issues: https://github.com/AwakeningOS/DSCC/issues
