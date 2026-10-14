@@ -44,3 +44,7 @@ The [research index](research/README.md) links the [latest seven-paper update](r
 T011's [capacity-only planner correction](PLANNER.md) is implemented in PR #24. It preserves successful legacy plans and distinguishes unknown search outcomes from proven infeasibility. It does not complete T011 or introduce GPU/network execution. For the first cooperative training milestone, churn, heterogeneous workloads, authenticated state recovery and owner-controlled participation can be developed before permissionless Byzantine/Sybil defenses; the required local execution and authorization boundaries remain in force.
 
 Issues: https://github.com/AwakeningOS/DSCC/issues
+
+## 2026-10-14 Agentic LLMs review and portable improvement history
+
+The [text-based review](research/2026-10-14-AGENTIC_LLMS_REVIEW.ja.md), [implementation handoff](research/agentic-llms-2026-10-14/IMPLEMENTATION_HANDOFF.ja.md) and [source ledger](research/agentic-llms-2026-10-14/SOURCES_AND_LIMITS.ja.md) connect the supplied textbook and five primary-source checks to T010/T012. Proposed lanes A1–A5 cover harness/candidate/adoption records, context-use tracing, authorized execution and model handoff, training-data lineage, and latent-communication evaluation. B01–B12 are proposed acceptance conditions, not tests executed by this update. Existing task statuses, public interfaces, runtime and permissions remain unchanged.
