@@ -2,6 +2,14 @@
 
 Research references and implementation handoffs are dated evidence snapshots, not automatically implemented capabilities. Read the root [README](../../README.md) for DSCC's purpose, [STATUS](../STATUS.md) for actual capabilities and [TASKS](../TASKS.md) before editing code.
 
+## Living research tracks
+
+| Track | Research question and continuation |
+|---|---|
+| [R-HS — Collaborative autonomy and help-seeking emergence](help-seeking/README.md) | Can agents recognize what they lack and proactively request appropriate cooperation while respecting their partners' expertise, limits, burden and consent? The [agenda](help-seeking/RESEARCH_AGENDA.ja.md) defines eight questions and twelve unexecuted acceptance conditions; the [evidence ledger](help-seeking/SOURCES_AND_EVIDENCE.ja.md) separates direct training, auxiliary abilities and generalization. Continue in [Issue #28](https://github.com/AwakeningOS/DSCC/issues/28). |
+
+A research track is a continuing question, not a new implemented runtime or a claim that its field was invented by DSCC. Literature refresh and measured results update the track through explicit reviews.
+
 ## Current reading path
 
 | Material | What to use it for |
