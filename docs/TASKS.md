@@ -52,3 +52,8 @@ The [text-based review](research/2026-10-14-AGENTIC_LLMS_REVIEW.ja.md), [impleme
 ## R-HS — ongoing help-seeking emergence research
 
 The [R-HS research track](research/help-seeking/README.md) studies agents recognizing their limits and proactively requesting appropriate cooperation, without treating autonomy as isolation or human assistance as subordination. Its [evidence ledger](research/help-seeking/SOURCES_AND_EVIDENCE.ja.md) and [research agenda](research/help-seeking/RESEARCH_AGENDA.ja.md) cover eight questions, four work lanes and twelve proposed acceptance conditions. Continue literature review and record-level work under [Issue #28](https://github.com/AwakeningOS/DSCC/issues/28), coordinated with T012/T010/T007 and T001/T002 for actual authorized interaction. R-HS is a research category, not a new completed T-task or a runtime permission. Existing task statuses remain unchanged.
+
+
+## 2026-10-17 R-HS local trace lane
+
+The [dated R-HS research handoff](research/help-seeking/2026-10-17-COOPERATION_TRACE_HANDOFF.ja.md) updates primary-source coverage and introduces a bounded, evidence-linked local trace adapter at src/dscc/cooperation.py with synthetic tests. T012's existing AgentContribution format is retained; networking, training, owner authority and research task statuses are unchanged. This enables record-shape continuity only, not autonomous help-seeking or an actual human-in-the-loop service.

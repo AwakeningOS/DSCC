@@ -10,6 +10,10 @@ Research references and implementation handoffs are dated evidence snapshots, no
 
 A research track is a continuing question, not a new implemented runtime or a claim that its field was invented by DSCC. Literature refresh and measured results update the track through explicit reviews.
 
+## 2026-10-17 local cooperation trace
+
+The [R-HS primary-source review and partial L2 adapter handoff](help-seeking/2026-10-17-COOPERATION_TRACE_HANDOFF.ja.md) connects KL-PBD, CTXGAP, ASPI and the Swarmchasers case to six signed local episode stages and synthetic recovery tests. Local record continuity is not a trained help-seeking policy, actual third-party contact or security certification.
+
 ## Current reading path
 
 | Material | What to use it for |
