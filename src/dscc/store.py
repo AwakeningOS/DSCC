@@ -5,6 +5,7 @@ import contextlib
 import json
 import os
 import sqlite3
+import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,7 +14,7 @@ from typing import Any, Iterator
 from .blocks import BlockStore
 from .canonical import (MAX_BUNDLE_BYTES, MAX_OBJECT_BYTES, canonical_bytes, cid_for,
                         parse_json, validate_cid)
-from .identity import KEY_RE, generate_key, load_key, public_hex, sign, verify
+from .identity import KEY_RE, generate_key, load_key, public_hex, sign, verify, write_private_exclusive
 from .models import manifest, validate_manifest
 from .tools import TOOL_DIGEST, TOOL_ID, integer_stats, validate_values
 
@@ -70,6 +71,15 @@ class Node:
         if type(self.block_quota) is not int or not 1_048_576 <= self.block_quota <= 2**60:
             raise ValueError("invalid block storage quota")
         self.blocks = BlockStore(self.home, self.block_quota)
+        self._local = threading.local()
+        self.objects_artifacts_dir = self.home / "objects" / "artifacts"
+        self.objects_events_dir = self.home / "objects" / "events"
+        for directory in (self.objects_artifacts_dir, self.objects_events_dir):
+            directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+            try:
+                directory.chmod(0o700)
+            except OSError:
+                pass
         self.key = load_key(self.home / "signing.key")
         self.public_key = public_hex(self.key)
         self.db = self.home / "catalog.sqlite3"
@@ -77,6 +87,8 @@ class Node:
             version = c.execute("PRAGMA user_version").fetchone()[0]
             if version not in (0, 1):
                 raise ValueError("unsupported database schema; migration required")
+            c.execute("PRAGMA journal_mode=WAL")
+            c.execute("PRAGMA synchronous=FULL")
             c.executescript("""
               CREATE TABLE IF NOT EXISTS artifacts (
                 cid TEXT PRIMARY KEY, envelope BLOB NOT NULL,
@@ -98,6 +110,22 @@ class Node:
         except OSError:
             pass
 
+    def _persist_immutable_object(self, directory: Path, name: str, raw: bytes) -> None:
+        target = directory / name
+        if target.exists():
+            if target.is_symlink() or not target.is_file():
+                raise ValueError("immutable object path is not a regular file")
+            if target.read_bytes() != raw:
+                raise ValueError("immutable object content differs on disk")
+            return
+        tmp = directory / f".{uuid.uuid4().hex}.tmp"
+        try:
+            write_private_exclusive(tmp, raw)
+            os.replace(tmp, target)
+        finally:
+            if tmp.exists():
+                tmp.unlink()
+
     @contextlib.contextmanager
     def _connection(self) -> Iterator[sqlite3.Connection]:
         c = sqlite3.connect(self.db, timeout=20, isolation_level=None)
@@ -111,14 +139,27 @@ class Node:
 
     @contextlib.contextmanager
     def _transaction(self) -> Iterator[sqlite3.Connection]:
+        pending_objects: list[tuple[Path, str, bytes]] = []
         with self._connection() as c:
             c.execute("BEGIN IMMEDIATE")
+            self._local.pending_objects = pending_objects
             try:
                 yield c
                 c.execute("COMMIT")
             except BaseException:
                 c.execute("ROLLBACK")
                 raise
+            finally:
+                self._local.pending_objects = None
+        for directory, name, raw in pending_objects:
+            self._persist_immutable_object(directory, name, raw)
+
+    def _stage_object(self, directory: Path, name: str, raw: bytes) -> None:
+        pending = getattr(self._local, "pending_objects", None)
+        if pending is not None:
+            pending.append((directory, name, raw))
+        else:
+            self._persist_immutable_object(directory, name, raw)
 
     def _usage(self, c: sqlite3.Connection) -> int:
         # Logical payload budget, NOT a hard limit on SQLite pages, OS disk or RAM.
@@ -138,6 +179,7 @@ class Node:
         self._budget(c, len(encoded))
         cid = cid_for(encoded)
         c.execute("INSERT INTO events VALUES (?,?,?)", (body["seq"], cid, encoded))
+        self._stage_object(self.objects_events_dir, f"{body['seq']:012d}-{cid}", encoded)
         return cid
 
     def _get(self, c: sqlite3.Connection, cid: str) -> dict[str, Any]:
@@ -176,6 +218,7 @@ class Node:
         self._budget(c, len(raw))
         c.execute("INSERT INTO artifacts VALUES (?,?,?,?,?,?)", (
             cid, raw, doc["kind"], doc["title"], doc["summary"], utc_now()))
+        self._stage_object(self.objects_artifacts_dir, cid, raw)
         self._event(c, "artifact.stored", {"cid": cid, "signer": envelope["public_key"]})
         return cid
 
@@ -236,11 +279,209 @@ class Node:
     def verify_artifact(self, cid: str) -> dict[str, Any]:
         with self._connection() as c:
             e = self._get(c, cid)
-            missing = [p for p in e["body"]["parents"]
-                       if c.execute("SELECT 1 FROM artifacts WHERE cid=?", (p,)).fetchone() is None]
+            missing = []
+            for p in e["body"]["parents"]:
+                try:
+                    self._get(c, p)
+                except KeyError:
+                    missing.append(p)
             return {"cid": cid, "content_integrity": True, "signature_valid": True,
                     "signer": e["public_key"], "missing_parents": missing,
                     "scientific_correctness": "not_assessed"}
+
+    def verify_lineage(self, root_cid: str, *, max_records: int = 256) -> dict[str, Any]:
+        """Verify an artifact and every transitive parent envelope cryptographically."""
+        validate_cid(root_cid)
+        todo = [root_cid]
+        verified: dict[str, str] = {}
+        missing: list[str] = []
+        with self._connection() as c:
+            while todo:
+                cid = todo.pop()
+                if cid in verified:
+                    continue
+                if len(verified) >= max_records:
+                    raise ValueError(f"lineage exceeds verification bound of {max_records} records")
+                try:
+                    env = self._get(c, cid)
+                except KeyError:
+                    if cid == root_cid:
+                        raise
+                    if cid not in missing:
+                        missing.append(cid)
+                    continue
+                verified[cid] = env["public_key"]
+                todo.extend(env["body"]["parents"])
+        return {
+            "root_cid": root_cid,
+            "verified_count": len(verified),
+            "signers": sorted(set(verified.values())),
+            "missing_ancestors": sorted(missing),
+            "complete_lineage": not missing,
+            "scientific_correctness": "not_assessed",
+        }
+
+    def materialize_objects(self) -> dict[str, int]:
+        """Export any DB-stored immutable envelopes/events missing from objects/."""
+        written_artifacts = 0
+        written_events = 0
+        with self._connection() as c:
+            for row in c.execute("SELECT cid, envelope FROM artifacts ORDER BY cid").fetchall():
+                cid = row["cid"]
+                self._get(c, cid)
+                target = self.objects_artifacts_dir / cid
+                if not target.exists():
+                    self._persist_immutable_object(self.objects_artifacts_dir, cid, bytes(row["envelope"]))
+                    written_artifacts += 1
+            for row in c.execute("SELECT seq, cid, envelope FROM events ORDER BY seq").fetchall():
+                name = f"{row['seq']:012d}-{row['cid']}"
+                target = self.objects_events_dir / name
+                if not target.exists():
+                    self._persist_immutable_object(self.objects_events_dir, name, bytes(row["envelope"]))
+                    written_events += 1
+        return {"written_artifacts": written_artifacts, "written_events": written_events}
+
+    def rebuild_from_objects(self) -> dict[str, Any]:
+        """Rebuild catalog.sqlite3 atomically from verified immutable files in objects/.
+
+        Preserves existing job rows if catalog.sqlite3 is readable, verifies every
+        artifact CID/canonical JSON/Ed25519 signature/DAG acyclicity and event chain,
+        and leaves the previous database untouched on any failure.
+        """
+        artifacts: dict[str, tuple[bytes, dict[str, Any]]] = {}
+        for path in sorted(self.objects_artifacts_dir.iterdir()):
+            if path.name.startswith("."):
+                continue
+            if path.is_symlink() or not path.is_file():
+                raise ValueError(f"non-regular file in artifact object store: {path.name}")
+            cid = validate_cid(path.name)
+            raw = _bounded_file(path, MAX_OBJECT_BYTES)
+            if cid_for(raw) != cid:
+                raise ValueError(f"object store artifact CID mismatch: {cid}")
+            env = parse_json(raw)
+            if canonical_bytes(env) != raw:
+                raise ValueError(f"non-canonical object store artifact: {cid}")
+            doc = validate_manifest(verify(env, "artifact"))
+            artifacts[cid] = (raw, doc)
+
+        if len(artifacts) > MAX_RECORDS:
+            raise ValueError("artifact count limit reached")
+
+        # Validate parent completeness and DAG acyclicity before replacing catalog DB.
+        ordered: list[str] = []
+        remaining = dict(artifacts)
+        while remaining:
+            ready = sorted(
+                cid for cid, (_, doc) in remaining.items()
+                if all(p in artifacts and p not in remaining for p in doc["parents"])
+            )
+            if not ready:
+                missing_parents = sorted({
+                    p for _, (_, doc) in remaining.items()
+                    for p in doc["parents"] if p not in artifacts
+                })
+                if missing_parents:
+                    raise ValueError(f"object store missing parent artifacts: {missing_parents[0]}")
+                raise ValueError("cyclic artifact dependencies in object store")
+            for cid in ready:
+                ordered.append(cid)
+                remaining.pop(cid)
+
+        events: list[tuple[int, str, bytes]] = []
+        previous: str | None = None
+        event_files = sorted(
+            p for p in self.objects_events_dir.iterdir() if not p.name.startswith(".")
+        )
+        for expected_seq, path in enumerate(event_files, 1):
+            if path.is_symlink() or not path.is_file():
+                raise ValueError(f"non-regular file in event object store: {path.name}")
+            raw = _bounded_file(path, MAX_OBJECT_BYTES)
+            env = parse_json(raw)
+            if canonical_bytes(env) != raw:
+                raise ValueError("non-canonical event object")
+            body = verify(env, "event")
+            ev_cid = cid_for(raw)
+            if (body.get("seq") != expected_seq or body.get("previous") != previous
+                    or env["public_key"] != self.public_key
+                    or path.name != f"{expected_seq:012d}-{ev_cid}"):
+                raise ValueError("object store event chain verification failed")
+            events.append((expected_seq, ev_cid, raw))
+            previous = ev_cid
+
+        preserved_jobs: list[tuple[Any, ...]] = []
+        if self.db.is_file():
+            try:
+                with self._connection() as existing_conn:
+                    for row in existing_conn.execute(
+                        "SELECT id, spec, spec_cid, state, output_cid, error, created_at, updated_at FROM jobs"
+                    ).fetchall():
+                        preserved_jobs.append(tuple(row))
+            except sqlite3.DatabaseError:
+                preserved_jobs = []
+
+        tmp_db = self.home / f".catalog.rebuild.{uuid.uuid4().hex}.sqlite3"
+        try:
+            conn = sqlite3.connect(tmp_db, timeout=20, isolation_level=None)
+            try:
+                conn.execute("PRAGMA foreign_keys=ON")
+                conn.execute("PRAGMA journal_mode=DELETE")
+                conn.execute("PRAGMA synchronous=FULL")
+                conn.executescript("""
+                  CREATE TABLE artifacts (
+                    cid TEXT PRIMARY KEY, envelope BLOB NOT NULL,
+                    kind TEXT NOT NULL, title TEXT NOT NULL, summary TEXT NOT NULL,
+                    stored_at TEXT NOT NULL
+                  );
+                  CREATE TABLE events (
+                    seq INTEGER PRIMARY KEY, cid TEXT UNIQUE NOT NULL, envelope BLOB NOT NULL
+                  );
+                  CREATE TABLE jobs (
+                    id TEXT PRIMARY KEY, spec BLOB NOT NULL, spec_cid TEXT NOT NULL,
+                    state TEXT NOT NULL CHECK(state IN ('pending','approved','running','succeeded','failed','cancelled')),
+                    output_cid TEXT, error TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+                  );
+                  PRAGMA user_version=1;
+                """)
+                conn.execute("BEGIN IMMEDIATE")
+                now = utc_now()
+                for cid in ordered:
+                    raw, doc = artifacts[cid]
+                    conn.execute(
+                        "INSERT INTO artifacts VALUES (?,?,?,?,?,?)",
+                        (cid, raw, doc["kind"], doc["title"], doc["summary"], now),
+                    )
+                for seq, ev_cid, raw in events:
+                    conn.execute("INSERT INTO events VALUES (?,?,?)", (seq, ev_cid, raw))
+                for job_row in preserved_jobs:
+                    conn.execute("INSERT INTO jobs VALUES (?,?,?,?,?,?,?,?)", job_row)
+                conn.execute("COMMIT")
+            finally:
+                conn.close()
+            try:
+                tmp_db.chmod(0o600)
+            except OSError:
+                pass
+            for suffix in ("-wal", "-shm"):
+                sidecar = Path(str(self.db) + suffix)
+                if sidecar.exists():
+                    try:
+                        sidecar.unlink()
+                    except OSError:
+                        pass
+            os.replace(tmp_db, self.db)
+            with self._connection() as c:
+                c.execute("PRAGMA journal_mode=WAL")
+                c.execute("PRAGMA synchronous=FULL")
+        finally:
+            if tmp_db.exists():
+                tmp_db.unlink()
+        return {
+            "rebuilt": True,
+            "artifacts": len(ordered),
+            "events": len(events),
+            "preserved_jobs": len(preserved_jobs),
+            "event_head": previous,
+        }
 
     def audit(self) -> dict[str, Any]:
         with self._connection() as c:
@@ -372,6 +613,33 @@ class Node:
             row = dict(self._job(c, job_id))
             row["spec"] = parse_json(bytes(row["spec"]))
             return row
+
+    def list_jobs(self, *, state: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
+        allowed_states = {"pending", "approved", "running", "succeeded", "failed", "cancelled"}
+        if state is not None and state not in allowed_states:
+            raise ValueError("invalid job state filter")
+        if type(limit) is not int or not 1 <= limit <= 1000:
+            raise ValueError("invalid limit")
+        with self._connection() as c:
+            if state is None:
+                rows = c.execute(
+                    "SELECT id FROM jobs ORDER BY created_at DESC, id LIMIT ?", (limit,)
+                ).fetchall()
+            else:
+                rows = c.execute(
+                    "SELECT id FROM jobs WHERE state=? ORDER BY created_at DESC, id LIMIT ?",
+                    (state, limit),
+                ).fetchall()
+            result = []
+            for r in rows:
+                row = dict(self._job(c, r["id"]))
+                row["spec"] = parse_json(bytes(row["spec"]))
+                result.append(row)
+            return result
+
+    def orphaned_running_jobs(self) -> list[dict[str, Any]]:
+        """Explicitly report jobs left in 'running' state for owner crash recovery."""
+        return self.list_jobs(state="running")
 
     def _transition(self, job_id: str, allowed: tuple[str, ...], target: str) -> None:
         with self._transaction() as c:

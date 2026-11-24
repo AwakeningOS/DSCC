@@ -25,7 +25,11 @@ def plan_inference(model: dict[str, Any],
 
     devices = []
     networks = {}
+    seen_capabilities: set[str] = set()
     for capability_cid, payload in capabilities:
+        if capability_cid in seen_capabilities:
+            raise ValueError("duplicate capability_cid in inference planning")
+        seen_capabilities.add(capability_cid)
         cap = validate_capability(payload)
         networks[capability_cid] = cap["network"]
         if "inference" not in cap["policy"]["accepted_job_classes"]:
@@ -99,6 +103,12 @@ def plan_inference(model: dict[str, Any],
             )
         if "unknown" in network_classes:
             plan["warnings"].append("one or more capability records have unknown network class")
+        selected_capacity = sum(capacities[key] for key in used)
+        if selected_capacity < required:
+            plan["warnings"].append(
+                "selected devices have less aggregate memory than declared minimum_memory_bytes; "
+                "runtime KV/activation headroom is insufficient"
+            )
 
     encoded = canonical_bytes(plan)
     return {"plan_id": cid_for(encoded), **plan}
