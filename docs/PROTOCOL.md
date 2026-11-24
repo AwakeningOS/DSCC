@@ -71,8 +71,10 @@ Implemented methods: `initialize`, `ping`, `tools/list`, `tools/call`, `resource
 | record_compute_capability | Store an owner-signed capability/policy record; does not publish or authorize remote execution |
 | record_training_run | Store a training observation; does not start training |
 | plan_open_model_inference | Create a deterministic non-executing placement proposal from model/capability records |
+| record_research | Validate and store a `dscc.research/0.1` profile with local source CID/JSON Pointer checks |
+| get_research_handoff | Read an explicit `ResearchState` CID and its complete verified ancestor closure |
 
-There is no MCP tool for owner approval, execution, export, key management, large-block upload, resource-policy activation or remote publication. However, the MCP process runs as the same OS user in M0 and loads the node key. An agent with a separate unrestricted shell can bypass interface-level distinctions. Strong owner/agent/process separation is T001, not a feature of this seed.
+There is no MCP tool for owner approval, execution, export, key management, large-block upload, resource-policy activation or remote publication. When launched with `dscc mcp --service-url http://127.0.0.1:<port>` and a `model`-scoped bearer token in `DSCC_TOKEN`, the MCP process communicates strictly with the authenticated local IPC service (`dscc serve`) and never opens `signing.key` or `catalog.sqlite3`. An agent with a separate unrestricted shell under the same OS user can still bypass same-user filesystem boundaries; separate OS-user isolation and OS keychains remain follow-up work.
 
 Resources use `dscc://artifact/{cid}`. Resource listing is CID-ordered in pages of 100 and uses the last CID as a cursor. It is not a snapshot under concurrent writes; restart listing for a complete current view. Keyword search returns up to its requested limit (maximum 100). Access to a project means access to all of that node's research records; use separate node directories for confidentiality boundaries until finer-grained authorization is implemented.
 

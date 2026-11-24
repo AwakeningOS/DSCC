@@ -4,15 +4,15 @@ Choose one READY task per branch. Check the matching GitHub Issue and coordinate
 
 | ID | Task | Status | Dependencies |
 |---|---|---|---|
-| [T001](tasks/T001.md) | Local service and owner permissions | READY | — |
+| [T001](tasks/T001.md) | Local service and owner permissions | Local IPC & scope boundary IMPLEMENTED (ADR-0006); OS keychain / separate OS-user worker open | — |
 | [T002](tasks/T002.md) | Official MCP SDK and host-app integration | READY | — |
 | [T003](tasks/T003.md) | WASI executor with enforceable limits | READY | — |
-| [T004](tasks/T004.md) | Desktop user interface | BLOCKED | T001 |
+| [T004](tasks/T004.md) | Desktop user interface | READY (T001 local service boundary available) | T001 |
 | [T005](tasks/T005.md) | Explicit peer invitations and artifact transport | READY | — |
 | [T006](tasks/T006.md) | GPU worker capability and isolation matrix | BLOCKED | T001, T003 |
-| [T007](tasks/T007.md) | Research object adapters and catalog rebuild | READY | — |
+| [T007](tasks/T007.md) | Research object adapters and catalog rebuild | Immutable objects, FTS5/graph rebuild, paper round-trip, PROV/RO-Crate IMPLEMENTED; CWL open | — |
 | [T008](tasks/T008.md) | Reproducible shared-world example | BLOCKED | T003, T007 |
-| [T009](tasks/T009.md) | Adversarial verification and release audit | READY | — |
+| [T009](tasks/T009.md) | Adversarial verification and release audit | Local adversarial suite & core fixes IMPLEMENTED; independent audit & Windows verification open | — |
 | [T010](tasks/T010.md) | Cross-domain Exploration Atlas | READY for contracts/index | T007 coordination; T001/T002/T004/T005 for later integration |
 | [T011](tasks/T011.md) | Distributed Open Model Commons execution | BLOCKED for public execution; isolated work READY | T001/T003/T005/T006/T009 for full execution |
 | [T012](tasks/T012.md) | Distributed AI Research Laboratory orchestration | Local contracts/handoff IMPLEMENTED; real-model experiment READY; full autonomous distributed execution BLOCKED | T007/T010 coordination; T001/T002/T005/T009/T011 for later execution |

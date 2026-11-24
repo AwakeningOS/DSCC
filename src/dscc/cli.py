@@ -7,11 +7,16 @@ import os
 import sys
 from pathlib import Path
 
+from .adapters import export_prov_json, export_rocrate_dir, paper_to_seed
 from .canonical import MAX_BUNDLE_BYTES, MAX_OBJECT_BYTES, canonical_bytes, parse_json
+from .catalog import CatalogIndex
+from .cooperation import episode_history, record_step
 from .demo import run_demo
+from .ipc import LocalIPCServer, LocalServiceClient
 from .mcp_server import MCPServer
 from .omc_service import OpenModelCommons
 from .research import ResearchService
+from .service import TokenStore
 from .store import Node, _bounded_file, init_node
 
 
@@ -34,12 +39,55 @@ def parser() -> argparse.ArgumentParser:
     q.add_argument("query", nargs="?", default="")
     q.add_argument("--limit", type=int, default=20)
 
-    for name in ("fetch", "verify"):
+    for name in ("fetch", "verify", "verify-lineage"):
         x = s.add_parser(name)
         x.add_argument("cid")
 
-    for name in ("status", "audit", "mcp", "demo"):
+    for name in ("status", "audit", "demo", "catalog-rebuild", "token-list"):
         s.add_parser(name)
+
+    m = s.add_parser("mcp", help="Run stdio MCP server (local node or authenticated local IPC service)")
+    m.add_argument("--service-url", help="Connect to an authenticated local IPC service (http://127.0.0.1:<port>)")
+    m.add_argument("--token-env", default="DSCC_TOKEN", help="Environment variable holding the bearer token")
+
+    sv = s.add_parser("serve", help="Run owner-controlled authenticated local IPC service on 127.0.0.1 only")
+    sv.add_argument("--port", type=int, default=0)
+
+    ti = s.add_parser("token-issue", help="Owner-only: issue a scoped bearer token (owner or model)")
+    ti.add_argument("--scope", choices=("owner", "model"), required=True)
+    ti.add_argument("--label", default="")
+
+    tr = s.add_parser("token-revoke", help="Owner-only: revoke an issued bearer token by token_id")
+    tr.add_argument("token_id")
+
+    cs = s.add_parser("catalog-search", help="Search the rebuildable FTS5 and structured metadata index")
+    cs.add_argument("query", nargs="?", default="")
+    cs.add_argument("--kind")
+    cs.add_argument("--project")
+    cs.add_argument("--research-type")
+    cs.add_argument("--signer")
+    cs.add_argument("--limit", type=int, default=20)
+
+    cn = s.add_parser("catalog-neighbors", help="Inspect parents, children and research relations in the index")
+    cn.add_argument("cid")
+
+    ep = s.add_parser("export-prov", help="Export an artifact closure as W3C PROV-JSON")
+    ep.add_argument("cid")
+    ep.add_argument("--out", type=Path)
+
+    er = s.add_parser("export-rocrate", help="Export an artifact closure as an RO-Crate 1.1 directory")
+    er.add_argument("cid")
+    er.add_argument("--out-dir", type=Path, required=True)
+
+    ip = s.add_parser("import-paper", help="Record a concept-paper Artifact manifest as a DSCC seed record")
+    ip.add_argument("--file", type=Path, required=True)
+
+    cr = s.add_parser("cooperation-record", help="Record a local R-HS cooperation step (no external messaging)")
+    cr.add_argument("--file", type=Path, required=True)
+
+    ch = s.add_parser("cooperation-history", help="Inspect a local R-HS cooperation episode chain")
+    ch.add_argument("head_cid")
+    ch.add_argument("--max-steps", type=int, default=64)
 
     j = s.add_parser("submit-job")
     j.add_argument("--input-cid", required=True)
@@ -94,13 +142,34 @@ def main(argv: list[str] | None = None) -> int:
             result = init_node(a.home, a.quota_mb, a.block_quota_gb).status()
         elif a.command == "demo":
             result = run_demo()
+        elif a.command == "mcp" and a.service_url:
+            token = os.environ.get(a.token_env, "")
+            if not token:
+                raise ValueError(f"bearer token environment variable '{a.token_env}' is empty")
+            MCPServer(LocalServiceClient(a.service_url, token)).serve()
+            return 0
         else:
             node = Node(a.home)
             omc = OpenModelCommons(node)
             if a.command == "mcp":
                 MCPServer(node).serve()
                 return 0
-            if a.command == "record":
+            if a.command == "serve":
+                server = LocalIPCServer(node, host="127.0.0.1", port=a.port)
+                print(json.dumps({
+                    "listening": server.url,
+                    "public_key": node.public_key,
+                    "loopback_only": True,
+                }, ensure_ascii=False), flush=True)
+                server.serve_forever()
+                return 0
+            if a.command == "token-issue":
+                result = TokenStore(node.home).issue(a.scope, label=a.label)
+            elif a.command == "token-revoke":
+                result = TokenStore(node.home).revoke(a.token_id)
+            elif a.command == "token-list":
+                result = {"tokens": TokenStore(node.home).list_metadata()}
+            elif a.command == "record":
                 result = {"cid": node.record(_profile(a.file))}
             elif a.command == "search":
                 result = node.search(a.query, a.limit)
@@ -108,6 +177,45 @@ def main(argv: list[str] | None = None) -> int:
                 result = node.fetch(a.cid)
             elif a.command == "verify":
                 result = node.verify_artifact(a.cid)
+            elif a.command == "verify-lineage":
+                result = node.verify_lineage(a.cid)
+            elif a.command == "catalog-rebuild":
+                result = {
+                    "database": node.rebuild_from_objects(),
+                    "search_index": CatalogIndex(node).rebuild(),
+                }
+            elif a.command == "catalog-search":
+                result = CatalogIndex(node).search(
+                    query=a.query, kind=a.kind, project=a.project,
+                    research_type=a.research_type, signer=a.signer, limit=a.limit,
+                )
+            elif a.command == "catalog-neighbors":
+                result = CatalogIndex(node).neighbors(a.cid)
+            elif a.command == "export-prov":
+                prov = export_prov_json(node, a.cid)
+                if a.out is not None:
+                    with a.out.open("xb") as target:
+                        target.write((json.dumps(prov, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+                    result = {"exported": str(a.out), "root_cid": a.cid}
+                else:
+                    result = prov
+            elif a.command == "export-rocrate":
+                result = export_rocrate_dir(node, a.cid, a.out_dir)
+            elif a.command == "import-paper":
+                seed_doc = paper_to_seed(_profile(a.file))
+                result = {"cid": node.record(seed_doc), "kind": seed_doc["kind"], "executed": False}
+            elif a.command == "cooperation-record":
+                payload = _profile(a.file)
+                if not set(payload) == {"project", "contributor", "step"}:
+                    raise ValueError("cooperation input must contain project, contributor and step")
+                result = record_step(
+                    node,
+                    project=payload["project"],
+                    contributor=payload["contributor"],
+                    step=payload["step"],
+                )
+            elif a.command == "cooperation-history":
+                result = {"steps": episode_history(node, a.head_cid, max_steps=a.max_steps)}
             elif a.command == "status":
                 result = node.status()
             elif a.command == "audit":
