@@ -33,15 +33,37 @@ class OpenModelCommons:
             raise ValueError("artifact is not an Open Model Commons model manifest")
         return validate_model(body["data"][MODEL_KEY])
 
-    def inspect_model(self, cid: str) -> dict:
+    def inspect_model(self, cid: str, *, verify_blocks: bool = False) -> dict:
         payload = self._model_payload(cid)
         blocks = []
         missing = []
+        mismatched = []
         for row in payload["weights"]:
             available = self.blocks.available(row["cid"])
-            blocks.append({**row, "available_local": available})
+            size_matches = False
+            digest_verified = False
             if not available:
                 missing.append(row["cid"])
+            else:
+                try:
+                    actual_size = self.blocks.size(row["cid"])
+                    size_matches = actual_size == row["bytes"]
+                    if verify_blocks:
+                        self.blocks.verify(row["cid"], expected_bytes=row["bytes"])
+                        digest_verified = True
+                except (KeyError, ValueError):
+                    size_matches = False
+                    digest_verified = False
+                if not size_matches or (verify_blocks and not digest_verified):
+                    mismatched.append(row["cid"])
+            entry = {
+                **row,
+                "available_local": available,
+                "size_matches": size_matches,
+            }
+            if verify_blocks:
+                entry["digest_verified"] = digest_verified
+            blocks.append(entry)
         return {
             "cid": cid,
             "profile": payload["schema"],
@@ -50,7 +72,8 @@ class OpenModelCommons:
             "model": payload,
             "weight_blocks": blocks,
             "missing_blocks": missing,
-            "complete_local_copy": not missing,
+            "mismatched_blocks": mismatched,
+            "complete_local_copy": not missing and not mismatched,
             "execution_available": False,
         }
 

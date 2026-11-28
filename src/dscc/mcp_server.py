@@ -83,10 +83,17 @@ def _check_args(arguments: Any, schema: dict) -> dict:
 
 
 class MCPServer:
-    def __init__(self, node: Node):
-        self.node = node
-        self.omc = OpenModelCommons(node)
-        self.research = ResearchService(node)
+    def __init__(self, node: Node | Any):
+        from .ipc import LocalServiceClient
+        self._client: LocalServiceClient | None = node if isinstance(node, LocalServiceClient) else None
+        if self._client is None:
+            self.node: Node | None = node
+            self.omc: OpenModelCommons | None = OpenModelCommons(node)
+            self.research: ResearchService | None = ResearchService(node)
+        else:
+            self.node = None
+            self.omc = None
+            self.research = None
         self.initialized = False
         self.ready = False
 
@@ -98,6 +105,45 @@ class MCPServer:
         if name not in TOOL_MAP:
             raise ValueError("unknown tool")
         a = _check_args(arguments, TOOL_MAP[name][2])
+        if self._client is not None:
+            if name == "node_status":
+                return self._client.status()
+            if name == "search_assets":
+                return {"assets": self._client.search(a.get("query", ""), a.get("limit", 20))}
+            if name == "fetch_artifact":
+                return self._client.fetch(a["cid"])
+            if name == "record_artifact":
+                return self._client.record_manifest(
+                    a["kind"], a["title"], a["data"], summary=a.get("summary", ""),
+                    parents=a.get("parents", []), license=a.get("license", "NOASSERTION"),
+                )
+            if name == "verify_artifact":
+                return self._client.verify_artifact(a["cid"])
+            if name == "inspect_tools":
+                return self._client.inspect_tools()
+            if name == "submit_job":
+                return self._client.submit_job(a["input_cid"], a.get("tool", TOOL_ID))
+            if name == "job_status":
+                return self._client.job_status(a["job_id"])
+            if name == "record_open_model":
+                return self._client.record_open_model(a["payload"], license=a.get("license", "NOASSERTION"))
+            if name == "inspect_open_model":
+                return self._client.inspect_open_model(a["cid"])
+            if name == "record_compute_capability":
+                return self._client.record_compute_capability(a["payload"], license=a.get("license", "NOASSERTION"))
+            if name == "record_training_run":
+                return self._client.record_training_run(a["payload"], license=a.get("license", "NOASSERTION"))
+            if name == "record_research":
+                return self._client.record_research(a["payload"], license=a.get("license", "NOASSERTION"))
+            if name == "get_research_handoff":
+                return self._client.get_research_handoff(a["state_cid"])
+            if name == "plan_open_model_inference":
+                return self._client.plan_open_model_inference(
+                    a["model_cid"], a["capability_cids"], precision=a.get("precision")
+                )
+            raise ValueError("unimplemented tool")
+
+        assert self.node is not None and self.omc is not None and self.research is not None
         if name == "node_status":
             return self.node.status()
         if name == "search_assets":
@@ -182,12 +228,14 @@ class MCPServer:
                 value = self.call_tool(name, params.get("arguments", {}))
                 result = {"content": [{"type": "text", "text": json.dumps(value, ensure_ascii=False)}],
                           "isError": False}
-            except (ValueError, KeyError, TypeError) as exc:
+            except (ValueError, KeyError, TypeError, PermissionError) as exc:
                 result = {"content": [{"type": "text", "text": str(exc)}], "isError": True}
         elif method == "resources/list":
             try:
-                page = self.node.resource_page(params.get("cursor"))
-            except ValueError:
+                page = (self._client.resource_page(params.get("cursor"))
+                        if self._client is not None
+                        else self.node.resource_page(params.get("cursor")))
+            except (ValueError, PermissionError):
                 return self.error(ident, -32602, "Invalid resource cursor")
             result = {"resources": [
                 {"uri": f"dscc://artifact/{r['cid']}", "name": r["title"], "mimeType": "application/json"}
@@ -199,8 +247,9 @@ class MCPServer:
             if not isinstance(uri, str) or not uri.startswith("dscc://artifact/"):
                 return self.error(ident, -32602, "Unsupported resource URI")
             try:
-                value = self.node.fetch(uri[len("dscc://artifact/"):])
-            except (ValueError, KeyError):
+                cid = uri[len("dscc://artifact/"):]
+                value = self._client.fetch(cid) if self._client is not None else self.node.fetch(cid)
+            except (ValueError, KeyError, PermissionError):
                 return self.error(ident, -32002, "Resource is invalid or unavailable")
             result = {"contents": [{"uri": uri, "mimeType": "application/json",
                                     "text": json.dumps(value, ensure_ascii=False)}]}

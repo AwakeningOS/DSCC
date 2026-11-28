@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import base64
+import os
 import re
+import stat
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +18,38 @@ KEY_RE = re.compile(r"^[0-9a-f]{64}$")
 DOMAINS = {"artifact": b"DSCC-ARTIFACT-SEED-v1\x00", "event": b"DSCC-EVENT-SEED-v1\x00"}
 
 
+def write_private_exclusive(path: Path, data: bytes) -> None:
+    """Atomically create a new owner-only file without a world-readable race window."""
+    if os.name == "posix":
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(path, flags, 0o600)
+        try:
+            try:
+                os.fchmod(fd, 0o600)
+            except OSError:
+                pass
+            with os.fdopen(fd, "wb") as f:
+                f.write(data)
+                f.flush()
+                os.fsync(f.fileno())
+        except BaseException:
+            try:
+                path.unlink()
+            except OSError:
+                pass
+            raise
+    else:
+        with path.open("xb") as f:
+            f.write(data)
+            f.flush()
+        try:
+            path.chmod(0o600)
+        except OSError:
+            pass
+
+
 def public_hex(key: Ed25519PrivateKey) -> str:
     return key.public_key().public_bytes(
         serialization.Encoding.Raw, serialization.PublicFormat.Raw
@@ -26,15 +60,30 @@ def generate_key(path: Path) -> None:
     key = Ed25519PrivateKey.generate()
     raw = key.private_bytes(serialization.Encoding.Raw, serialization.PrivateFormat.Raw,
                             serialization.NoEncryption())
-    with path.open("xb") as f:
-        f.write(raw)
-    path.chmod(0o600)
+    write_private_exclusive(path, raw)
 
 
 def load_key(path: Path) -> Ed25519PrivateKey:
     if path.is_symlink():
         raise ValueError("node signing key must not be a symlink")
-    raw = path.read_bytes()
+    if os.name == "posix":
+        flags = os.O_RDONLY
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        try:
+            fd = os.open(path, flags)
+        except OSError as exc:
+            raise ValueError("unable to open node signing key safely") from exc
+        with os.fdopen(fd, "rb") as f:
+            st = os.fstat(f.fileno())
+            if not stat.S_ISREG(st.st_mode):
+                raise ValueError("node signing key must be a regular file")
+            raw = f.read(33)
+    else:
+        if not path.is_file():
+            raise ValueError("node signing key must be a regular file")
+        with path.open("rb") as f:
+            raw = f.read(33)
     if len(raw) != 32:
         raise ValueError("invalid node signing key")
     return Ed25519PrivateKey.from_private_bytes(raw)

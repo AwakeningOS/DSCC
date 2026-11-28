@@ -18,6 +18,7 @@ The [R-HS primary-source review and partial L2 adapter handoff](help-seeking/202
 
 | Material | What to use it for |
 |---|---|
+| [2026-11-28 Reliquary / Gumbel Substitution ecosystem note](2026-11-28-RELIQUARY_ECOSYSTEM_NOTE.ja.md) | External ecosystem observation of decentralized heterogeneous-GPU RL rollouts (`arXiv:2611.27375`, `reliquadotai/reliquary`), primary-source check depth, and remaining trainer-handover / R-HS integration questions; no DSCC runtime or training integration is introduced |
 | [2026-10-14 Agentic LLMs text-based review](2026-10-14-AGENTIC_LLMS_REVIEW.ja.md) | Portable harness, memory/retrieval and evaluation choices; [implementation handoff](agentic-llms-2026-10-14/IMPLEMENTATION_HANDOFF.ja.md) maps five lanes and twelve proposed acceptance conditions to existing contracts; [source ledger](agentic-llms-2026-10-14/SOURCES_AND_LIMITS.ja.md) distinguishes the supplied textbook, five primary-source checks and DSCC proposals |
 | [2026-10-13 Anthropic edge inference and handoff analysis](2026-10-13-ANTHROPIC_EDGE_HANDOFF.ja.md) | Low-RAM/CPU participation, runtime setup recipes, pipeline recovery, grounded agent replacement and twelve acceptance tests; [source scope and limitations](anthropic-2026-10-13/SOURCES_AND_LIMITS.ja.md) separate observations from proposed DSCC integration |
 | [2026-10-09 research and implementation update](2026-10-09-RESEARCH_UPDATE.ja.md) | Five October reports plus September RRSI/GeoMesh; source-access depth, cooperative training, experience usefulness, harness tests and concrete acceptance conditions |
